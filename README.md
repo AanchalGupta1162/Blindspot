@@ -170,6 +170,6 @@ Stop the running server before `npm run build`; development and production share
 | `data/` | Validated recordings, benchmark results and trained models |
 | `tests/`, `scripts/` | Verification and reproducible CLI workflows |
 
-The detailed explanation is in [docs/PROJECT-GUIDE.md](docs/PROJECT-GUIDE.md). Verification notes: [docs/VERIFICATION.md](docs/VERIFICATION.md). Presentation/photo sources: [docs/DEMO-SOURCES.md](docs/DEMO-SOURCES.md). Submission notes: [docs/SUBMISSION.md](docs/SUBMISSION.md).
+The detailed explanation is in [docs/PROJECT-GUIDE.md](docs/PROJECT-GUIDE.md). Verification notes: [docs/VERIFICATION.md](docs/VERIFICATION.md). Presentation/photo sources: [docs/DEMO-SOURCES.md](docs/DEMO-SOURCES.md).
 
 Remaining work includes physical-sensor validation, broader fresh-seed evaluation, reducing unnecessary inspections, and production auth/email/hosting hardening. Wokwi is deferred. No hardware integration or real-world prevention claim is implied.
