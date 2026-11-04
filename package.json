@@ -1,0 +1,50 @@
+{
+  "name": "blindspot",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "build": "next build",
+    "start": "node scripts/serve.mjs --production",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "eval": "tsx scripts/run-eval.ts",
+    "record": "tsx scripts/record-runs.ts",
+    "record:scripted": "tsx scripts/record-runs.ts --scripted",
+    "calibrate:forecast": "tsx scripts/calibrate-forecast.ts",
+    "eval:research": "tsx scripts/eval-research.ts",
+    "train": "tsx scripts/train-estimator.ts",
+    "probe": "tsx scripts/probe-api.ts",
+    "eval:llm": "tsx scripts/run-llm-eval.ts",
+    "demo:setup": "tsx scripts/setup-demo.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx scripts/db-migrate.ts"
+  },
+  "dependencies": {
+    "better-auth": "^1.7.15",
+    "drizzle-orm": "^0.45.4",
+    "next": "^15.5.28",
+    "openai": "^7.47.0",
+    "pg": "^8.23.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "recharts": "^2.15.4",
+    "server-only": "^0.0.1",
+    "zod": "^3.25.76",
+    "zod-to-json-schema": "^3.25.2"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.15",
+    "@tailwindcss/postcss": "^4.3.4",
+    "@types/node": "^26.6.6",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "drizzle-kit": "^0.31.11",
+    "postcss": "^8.5.32",
+    "tailwindcss": "^4.3.4",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "vitest": "^5.1.0"
+  }
+}
