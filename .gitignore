@@ -6,4 +6,3 @@ data/.spend.json
 *.tsbuildinfo
 next-env.d.ts
 .data/
-docs/
