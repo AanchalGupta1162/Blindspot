@@ -1,0 +1,2603 @@
+{
+ "schemaVersion": 1,
+ "id": "research-v3-muse-spark-1.3-stuck_sensor-3000-llm",
+ "source": "llm",
+ "model": "muse-spark-1.3",
+ "label": "LLM agent (muse-spark-1.3) with the same tools and safety gate",
+ "headline": "alert at 50 min; limit would be breached at 138 min without action; no limit breach with the action.",
+ "createdAt": "2026-11-04T19:21:42.574Z",
+ "simulated": true,
+ "scenario": {
+  "kind": "stuck_sensor",
+  "seed": 3000,
+  "startHour": 10.52,
+  "durationMin": 240,
+  "onsetMin": 45.65
+ },
+ "trigger": {
+  "tMin": 49.5,
+  "rule": "flat",
+  "detail": "sensor S1 has been exactly constant for 15 minutes"
+ },
+ "invocations": 2,
+ "status": "applied",
+ "alertMin": 49.5,
+ "action": {
+  "action": {
+   "kind": "dispatch_human_check"
+  },
+  "reason": "S1 (sole Rack A temp) exactly flat 26.77C for ~12-15min, lost coverage so Rack A safety unknown. Diagnose mostly nominal but cannot prove safe. Dispatch is inspection/repair in simulation, not proven prevention, restores coverage and helps if hidden vent fault.",
+  "tApplyMin": 61.5,
+  "approvalDelayMin": 2
+ },
+ "actions": [
+  {
+   "action": {
+    "kind": "dispatch_human_check"
+   },
+   "reason": "S1 (sole Rack A temp) exactly flat 26.77C for ~12-15min, lost coverage so Rack A safety unknown. Diagnose mostly nominal but cannot prove safe. Dispatch is inspection/repair in simulation, not proven prevention, restores coverage and helps if hidden vent fault.",
+   "tApplyMin": 61.5,
+   "approvalDelayMin": 2
+  }
+ ],
+ "approval": {
+  "decision": "approved",
+  "mode": "auto-simulated",
+  "by": "simulated operator (auto-approved in this recording)"
+ },
+ "outcome": {
+  "doNothing": {
+   "limitExceeded": true,
+   "firstBreachMin": 137.5,
+   "firstBreachNode": "rackA",
+   "degreeMinutesAboveLimit": 264.4,
+   "peakMarginC": 3.85
+  },
+  "withAction": {
+   "limitExceeded": false,
+   "firstBreachMin": null,
+   "firstBreachNode": null,
+   "degreeMinutesAboveLimit": 0,
+   "peakMarginC": -5.6
+  },
+  "peakMarginImprovementC": 9.45,
+  "degreeMinutesSaved": 264.4
+ },
+ "usage": {
+  "inputTokens": 67879,
+  "outputTokens": 5452,
+  "reasoningTokens": 2526,
+  "costUsd": 0.108,
+  "turns": 13,
+  "models": [
+   "muse-spark-1.3"
+  ]
+ },
+ "events": [
+  {
+   "i": 0,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "trigger",
+   "data": {
+    "rule": "flat",
+    "detail": "sensor S1 has been exactly constant for 15 minutes"
+   }
+  },
+  {
+   "i": 1,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "assistant",
+   "data": {
+    "text": "Frozen sensor flagged — I'll verify coverage and hunt for hidden heat.",
+    "model": "muse-spark-1.3",
+    "turn": 1,
+    "tokens": {
+     "prompt_tokens": 2799,
+     "completion_tokens": 314,
+     "reasoning_tokens": 15
+    },
+    "costUsd": 0.00483,
+    "toolCalls": [
+     "list_sensors",
+     "sensor_metadata",
+     "sensor_metadata",
+     "sensor_metadata",
+     "sensor_metadata",
+     "sensor_metadata"
+    ]
+   }
+  },
+  {
+   "i": 2,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "list_sensors",
+    "args": {}
+   }
+  },
+  {
+   "i": 3,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "list_sensors",
+    "ok": true,
+    "result": {
+     "now_min_since_monitoring_started": 49.5,
+     "sensors": [
+      {
+       "id": "S1",
+       "label": "Rack A inlet temperature",
+       "location": "Rack A (hot aisle side)",
+       "kind": "temperature",
+       "unit": "°C"
+      },
+      {
+       "id": "S2",
+       "label": "Desk row 1 air temperature",
+       "location": "Desk row 1",
+       "kind": "temperature",
+       "unit": "°C"
+      },
+      {
+       "id": "S3",
+       "label": "Return air temperature",
+       "location": "AC return duct",
+       "kind": "temperature",
+       "unit": "°C"
+      },
+      {
+       "id": "M1",
+       "label": "UPS total power",
+       "location": "UPS output (all loads)",
+       "kind": "power",
+       "unit": "kW"
+      },
+      {
+       "id": "M2",
+       "label": "Rack B power-strip voltage drop",
+       "location": "Rack B feed, strip vs. panel",
+       "kind": "voltage_drop",
+       "unit": "mV"
+      }
+     ],
+     "note": "Everything else in the room is unobserved. Limits are simulated thresholds."
+    }
+   }
+  },
+  {
+   "i": 4,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "S1"
+    }
+   }
+  },
+  {
+   "i": 5,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "S1",
+     "label": "Rack A inlet temperature",
+     "location": "Rack A (hot aisle side)",
+     "unit": "°C",
+     "nominal_noise_sigma": 0.3,
+     "last_calibration_days_ago": 374,
+     "std_last_20min": 0.1543,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 6,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "S2"
+    }
+   }
+  },
+  {
+   "i": 7,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "S2",
+     "label": "Desk row 1 air temperature",
+     "location": "Desk row 1",
+     "unit": "°C",
+     "nominal_noise_sigma": 0.3,
+     "last_calibration_days_ago": 171,
+     "std_last_20min": 0.2834,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 8,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "S3"
+    }
+   }
+  },
+  {
+   "i": 9,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "S3",
+     "label": "Return air temperature",
+     "location": "AC return duct",
+     "unit": "°C",
+     "nominal_noise_sigma": 0.3,
+     "last_calibration_days_ago": 366,
+     "std_last_20min": 0.2925,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 10,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "M1"
+    }
+   }
+  },
+  {
+   "i": 11,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "M1",
+     "label": "UPS total power",
+     "location": "UPS output (all loads)",
+     "unit": "kW",
+     "nominal_noise_sigma": 0.04,
+     "last_calibration_days_ago": null,
+     "std_last_20min": 0.0478,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 12,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "M2"
+    }
+   }
+  },
+  {
+   "i": 13,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "M2",
+     "label": "Rack B power-strip voltage drop",
+     "location": "Rack B feed, strip vs. panel",
+     "unit": "mV",
+     "nominal_noise_sigma": 15,
+     "last_calibration_days_ago": null,
+     "std_last_20min": 12.2141,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 14,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "assistant",
+   "data": {
+    "text": "",
+    "model": "muse-spark-1.3",
+    "turn": 2,
+    "tokens": {
+     "prompt_tokens": 3712,
+     "completion_tokens": 297,
+     "reasoning_tokens": 44
+    },
+    "costUsd": 0.0059,
+    "toolCalls": [
+     "get_reading",
+     "get_reading",
+     "get_reading",
+     "get_reading",
+     "get_reading"
+    ]
+   }
+  },
+  {
+   "i": 15,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "S1"
+    }
+   }
+  },
+  {
+   "i": 16,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "S1",
+     "t_min": 49.5,
+     "value": 26.77,
+     "unit": "°C"
+    }
+   }
+  },
+  {
+   "i": 17,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "S2"
+    }
+   }
+  },
+  {
+   "i": 18,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "S2",
+     "t_min": 49.5,
+     "value": 26.2,
+     "unit": "°C"
+    }
+   }
+  },
+  {
+   "i": 19,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "S3"
+    }
+   }
+  },
+  {
+   "i": 20,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "S3",
+     "t_min": 49.5,
+     "value": 23.74,
+     "unit": "°C"
+    }
+   }
+  },
+  {
+   "i": 21,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "M1"
+    }
+   }
+  },
+  {
+   "i": 22,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "M1",
+     "t_min": 49.5,
+     "value": 4.46,
+     "unit": "kW"
+    }
+   }
+  },
+  {
+   "i": 23,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "M2"
+    }
+   }
+  },
+  {
+   "i": 24,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "M2",
+     "t_min": 49.5,
+     "value": 56.01,
+     "unit": "mV"
+    }
+   }
+  },
+  {
+   "i": 25,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "assistant",
+   "data": {
+    "text": "Current readings are normal, so I'll dig into history for hidden trends.",
+    "model": "muse-spark-1.3",
+    "turn": 3,
+    "tokens": {
+     "prompt_tokens": 4192,
+     "completion_tokens": 383,
+     "reasoning_tokens": 33
+    },
+    "costUsd": 0.00687,
+    "toolCalls": [
+     "get_history",
+     "get_history",
+     "get_history",
+     "get_history",
+     "get_history"
+    ]
+   }
+  },
+  {
+   "i": 26,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "S1",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 27,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "S1",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 48,
+       "value": 26.02
+      },
+      {
+       "t_min_ago": 44,
+       "value": 27.12
+      },
+      {
+       "t_min_ago": 40,
+       "value": 27.27
+      },
+      {
+       "t_min_ago": 36,
+       "value": 27.1
+      },
+      {
+       "t_min_ago": 32,
+       "value": 26.78
+      },
+      {
+       "t_min_ago": 28,
+       "value": 27.24
+      },
+      {
+       "t_min_ago": 24,
+       "value": 26.66
+      },
+      {
+       "t_min_ago": 20,
+       "value": 26.49
+      },
+      {
+       "t_min_ago": 16,
+       "value": 26.86
+      },
+      {
+       "t_min_ago": 12,
+       "value": 26.77
+      },
+      {
+       "t_min_ago": 8,
+       "value": 26.77
+      },
+      {
+       "t_min_ago": 4,
+       "value": 26.77
+      },
+      {
+       "t_min_ago": 0,
+       "value": 26.77
+      }
+     ],
+     "min": 25.99,
+     "max": 27.55,
+     "trend_per_10min": 0.005
+    }
+   }
+  },
+  {
+   "i": 28,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "S2",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 29,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "S2",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 48,
+       "value": 26.54
+      },
+      {
+       "t_min_ago": 44,
+       "value": 25.8
+      },
+      {
+       "t_min_ago": 40,
+       "value": 25.95
+      },
+      {
+       "t_min_ago": 36,
+       "value": 26.47
+      },
+      {
+       "t_min_ago": 32,
+       "value": 26.47
+      },
+      {
+       "t_min_ago": 28,
+       "value": 26.11
+      },
+      {
+       "t_min_ago": 24,
+       "value": 26.01
+      },
+      {
+       "t_min_ago": 20,
+       "value": 26.68
+      },
+      {
+       "t_min_ago": 16,
+       "value": 26.25
+      },
+      {
+       "t_min_ago": 12,
+       "value": 26.29
+      },
+      {
+       "t_min_ago": 8,
+       "value": 26.46
+      },
+      {
+       "t_min_ago": 4,
+       "value": 25.99
+      },
+      {
+       "t_min_ago": 0,
+       "value": 26.2
+      }
+     ],
+     "min": 25.73,
+     "max": 27.01,
+     "trend_per_10min": -0.011
+    }
+   }
+  },
+  {
+   "i": 30,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "S3",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 31,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "S3",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 48,
+       "value": 23.45
+      },
+      {
+       "t_min_ago": 44,
+       "value": 23.53
+      },
+      {
+       "t_min_ago": 40,
+       "value": 23.63
+      },
+      {
+       "t_min_ago": 36,
+       "value": 23.4
+      },
+      {
+       "t_min_ago": 32,
+       "value": 23.48
+      },
+      {
+       "t_min_ago": 28,
+       "value": 23.58
+      },
+      {
+       "t_min_ago": 24,
+       "value": 23.31
+      },
+      {
+       "t_min_ago": 20,
+       "value": 23.67
+      },
+      {
+       "t_min_ago": 16,
+       "value": 23.5
+      },
+      {
+       "t_min_ago": 12,
+       "value": 23.67
+      },
+      {
+       "t_min_ago": 8,
+       "value": 23.53
+      },
+      {
+       "t_min_ago": 4,
+       "value": 24.02
+      },
+      {
+       "t_min_ago": 0,
+       "value": 23.74
+      }
+     ],
+     "min": 22.9,
+     "max": 24.35,
+     "trend_per_10min": -0.013
+    }
+   }
+  },
+  {
+   "i": 32,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "M1",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 33,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "M1",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 48,
+       "value": 4.51
+      },
+      {
+       "t_min_ago": 44,
+       "value": 4.47
+      },
+      {
+       "t_min_ago": 40,
+       "value": 4.55
+      },
+      {
+       "t_min_ago": 36,
+       "value": 4.53
+      },
+      {
+       "t_min_ago": 32,
+       "value": 4.54
+      },
+      {
+       "t_min_ago": 28,
+       "value": 4.5
+      },
+      {
+       "t_min_ago": 24,
+       "value": 4.49
+      },
+      {
+       "t_min_ago": 20,
+       "value": 4.48
+      },
+      {
+       "t_min_ago": 16,
+       "value": 4.51
+      },
+      {
+       "t_min_ago": 12,
+       "value": 4.55
+      },
+      {
+       "t_min_ago": 8,
+       "value": 4.48
+      },
+      {
+       "t_min_ago": 4,
+       "value": 4.47
+      },
+      {
+       "t_min_ago": 0,
+       "value": 4.46
+      }
+     ],
+     "min": 4.4,
+     "max": 4.59,
+     "trend_per_10min": -0.007
+    }
+   }
+  },
+  {
+   "i": 34,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "M2",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 35,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "M2",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 48,
+       "value": 88.77
+      },
+      {
+       "t_min_ago": 44,
+       "value": 93.87
+      },
+      {
+       "t_min_ago": 40,
+       "value": 93.82
+      },
+      {
+       "t_min_ago": 36,
+       "value": 72.66
+      },
+      {
+       "t_min_ago": 32,
+       "value": 80.05
+      },
+      {
+       "t_min_ago": 28,
+       "value": 94.26
+      },
+      {
+       "t_min_ago": 24,
+       "value": 90.08
+      },
+      {
+       "t_min_ago": 20,
+       "value": 87.56
+      },
+      {
+       "t_min_ago": 16,
+       "value": 80.77
+      },
+      {
+       "t_min_ago": 12,
+       "value": 93.25
+      },
+      {
+       "t_min_ago": 8,
+       "value": 63.12
+      },
+      {
+       "t_min_ago": 4,
+       "value": 72.11
+      },
+      {
+       "t_min_ago": 0,
+       "value": 56.01
+      }
+     ],
+     "min": 45.47,
+     "max": 108.82,
+     "trend_per_10min": 1.416
+    }
+   }
+  },
+  {
+   "i": 36,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "assistant",
+   "data": {
+    "text": "S1 looks stuck flat, losing Rack A coverage — I'll cross-check hidden zones and diagnose.",
+    "model": "muse-spark-1.3",
+    "turn": 4,
+    "tokens": {
+     "prompt_tokens": 5664,
+     "completion_tokens": 301,
+     "reasoning_tokens": 197
+    },
+    "costUsd": 0.00836,
+    "toolCalls": [
+     "estimate_hidden_zones",
+     "diagnose"
+    ]
+   }
+  },
+  {
+   "i": 37,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "estimate_hidden_zones",
+    "args": {}
+   }
+  },
+  {
+   "i": 38,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "estimate_hidden_zones",
+    "ok": true,
+    "result": {
+     "t_min": 49.5,
+     "zones": [
+      {
+       "zone": "rackB",
+       "estimate_c": 29,
+       "sigma_c": 2,
+       "simulated_limit_c": 35,
+       "margin_to_limit_c": 6
+      },
+      {
+       "zone": "desk2",
+       "estimate_c": 26.3,
+       "sigma_c": 0.2,
+       "simulated_limit_c": 32,
+       "margin_to_limit_c": 5.7
+      },
+      {
+       "zone": "conn",
+       "estimate_c": 30.2,
+       "sigma_c": 2.4,
+       "simulated_limit_c": 70,
+       "margin_to_limit_c": 39.8
+      }
+     ],
+     "caveats": [
+      "Regression trained on simulated scenarios; its error is larger for faults that barely disturb the visible sensors (for example a blocked vent on rack B)."
+     ]
+    }
+   }
+  },
+  {
+   "i": 39,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "diagnose",
+    "args": {}
+   }
+  },
+  {
+   "i": 40,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "diagnose",
+    "ok": true,
+    "result": {
+     "t_min": 49.5,
+     "model_adequate": true,
+     "chi2_per_dof": 0.56,
+     "sensors_excluded_from_fit": [],
+     "observation_coverage": {
+      "untrusted_sensors": [],
+      "unobserved_due_to_sensor_failure": [],
+      "inspection_warranted": false,
+      "note": "Normal readings elsewhere cannot establish that a zone with a failed sensor is safe. A dispatched human check inspects and repairs existing faults in this simulation."
+     },
+     "forecast_uncertainty": {
+      "probabilities_are_calibrated": false,
+      "interpretation": "Probabilities are relative weights within fitted hypotheses, not measured probabilities of safety. Missing fault dynamics can make all hypotheses wrong.",
+      "empirical_upper_allowance_c": 16.32,
+      "worst_plausible_peak_margin_plus_allowance_c": 10.6,
+      "calibration_scenarios": 28,
+      "held_out_scenarios_covered": "12/14",
+      "scope": "Untreated 90-minute forecasts at monitoring minutes 60 and 90; not validated for post-intervention forecasts.",
+      "note": "Empirical one-sided upper residual allowance, using a max-over-checkpoints score per scenario. Calibration seeds are separate from estimator training and the published evaluation. Coverage assumptions may fail under dependent scenarios or distribution shift; this is not a real-world safety guarantee. It does not modify or bypass gate checks."
+     },
+     "p_fault": 0.217,
+     "hypotheses": [
+      {
+       "family": "none",
+       "posterior": 0.783,
+       "description": "No fault: readings are explained by the nominal model"
+      },
+      {
+       "family": "vent_rackB",
+       "posterior": 0.109,
+       "description": "Rack B vent/airflow blocked (up to 95%), onset ~5 min ago"
+      },
+      {
+       "family": "vent_rackA",
+       "posterior": 0.053,
+       "description": "Rack A vent/airflow blocked (up to 85%), onset ~5 min ago"
+      },
+      {
+       "family": "ac",
+       "posterior": 0.043,
+       "description": "AC cooling capacity degrading (up to 44% lost, ramp ~117 min), onset ~5 min ago"
+      }
+     ],
+     "if_nothing_is_done_90min": {
+      "p_hazard_within_alert_margin": 0.15,
+      "p_breach": 0.11,
+      "expected_peak_margin_c": -4.2,
+      "worst_plausible_peak_margin_c": -5.7,
+      "median_time_to_limit_min": null,
+      "alert_margin_c": 3
+     },
+     "note": "Hypothesis posteriors are tempered because residuals are autocorrelated. Early in a fault several hypotheses can fit; prefer actions that work under all of them."
+    }
+   }
+  },
+  {
+   "i": 41,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "assistant",
+   "data": {
+    "text": "No breach is forecast, but Rack A temperature coverage is lost — I'll test inspection and backup safeguards.",
+    "model": "muse-spark-1.3",
+    "turn": 5,
+    "tokens": {
+     "prompt_tokens": 6460,
+     "completion_tokens": 459,
+     "reasoning_tokens": 271
+    },
+    "costUsd": 0.01003,
+    "toolCalls": [
+     "simulate_action",
+     "simulate_action"
+    ]
+   }
+  },
+  {
+   "i": 42,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "simulate_action",
+    "args": {
+     "action": {
+      "kind": "dispatch_human_check"
+     },
+     "horizon_min": 60
+    }
+   }
+  },
+  {
+   "i": 43,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "simulate_action",
+    "ok": true,
+    "result": {
+     "action": {
+      "kind": "dispatch_human_check"
+     },
+     "takes_effect_in_min": 12,
+     "horizon_min": 60,
+     "do_nothing": {
+      "p_breach": 0.09,
+      "expected_peak_margin_c": -4.6,
+      "worst_plausible_peak_margin_c": -5.7,
+      "median_time_to_limit_min": null
+     },
+     "with_action": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -5.5,
+      "worst_plausible_peak_margin_c": -5.7,
+      "median_time_to_limit_min": null
+     },
+     "per_hypothesis": [
+      {
+       "family": "none",
+       "weight": 0.783,
+       "peak_margin_c_do_nothing": -5.7,
+       "peak_margin_c_with_action": -5.7,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "vent_rackB",
+       "weight": 0.018,
+       "peak_margin_c_do_nothing": 3.9,
+       "peak_margin_c_with_action": -3.7,
+       "time_to_limit_min_do_nothing": 31,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "vent_rackB",
+       "weight": 0.018,
+       "peak_margin_c_do_nothing": 3.9,
+       "peak_margin_c_with_action": -3.4,
+       "time_to_limit_min_do_nothing": 31,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "vent_rackB",
+       "weight": 0.018,
+       "peak_margin_c_do_nothing": 3.9,
+       "peak_margin_c_with_action": -3.3,
+       "time_to_limit_min_do_nothing": 31,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "vent_rackB",
+       "weight": 0.018,
+       "peak_margin_c_do_nothing": -2.4,
+       "peak_margin_c_with_action": -5.7,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "vent_rackB",
+       "weight": 0.018,
+       "peak_margin_c_do_nothing": -2.4,
+       "peak_margin_c_with_action": -5.1,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      }
+     ],
+     "reading_guide": "peak_margin_c = hottest (zone temperature - its limit) over the horizon; negative means within limits."
+    }
+   }
+  },
+  {
+   "i": 44,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "simulate_action",
+    "args": {
+     "action": {
+      "kind": "switch_backup_cooling",
+      "zone": "rackA"
+     },
+     "horizon_min": 60
+    }
+   }
+  },
+  {
+   "i": 45,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "simulate_action",
+    "ok": true,
+    "result": {
+     "action": {
+      "kind": "switch_backup_cooling",
+      "zone": "rackA"
+     },
+     "takes_effect_in_min": 7,
+     "horizon_min": 60,
+     "do_nothing": {
+      "p_breach": 0.09,
+      "expected_peak_margin_c": -4.6,
+      "worst_plausible_peak_margin_c": -5.7,
+      "median_time_to_limit_min": null
+     },
+     "with_action": {
+      "p_breach": 0.09,
+      "expected_peak_margin_c": -4.8,
+      "worst_plausible_peak_margin_c": -5.7,
+      "median_time_to_limit_min": null
+     },
+     "per_hypothesis": [
+      {
+       "family": "none",
+       "weight": 0.783,
+       "peak_margin_c_do_nothing": -5.7,
+       "peak_margin_c_with_action": -5.7,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "vent_rackB",
+       "weight": 0.018,
+       "peak_margin_c_do_nothing": 3.9,
+       "peak_margin_c_with_action": 3.5,
+       "time_to_limit_min_do_nothing": 31,
+       "time_to_limit_min_with_action": 31.5
+      },
+      {
+       "family": "vent_rackB",
+       "weight": 0.018,
+       "peak_margin_c_do_nothing": 3.9,
+       "peak_margin_c_with_action": 4.3,
+       "time_to_limit_min_do_nothing": 31,
+       "time_to_limit_min_with_action": 29
+      },
+      {
+       "family": "vent_rackB",
+       "weight": 0.018,
+       "peak_margin_c_do_nothing": 3.9,
+       "peak_margin_c_with_action": 4.3,
+       "time_to_limit_min_do_nothing": 31,
+       "time_to_limit_min_with_action": 28.5
+      },
+      {
+       "family": "vent_rackB",
+       "weight": 0.018,
+       "peak_margin_c_do_nothing": -2.4,
+       "peak_margin_c_with_action": -2.7,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "vent_rackB",
+       "weight": 0.018,
+       "peak_margin_c_do_nothing": -2.4,
+       "peak_margin_c_with_action": 1,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": 48.5
+      }
+     ],
+     "reading_guide": "peak_margin_c = hottest (zone temperature - its limit) over the horizon; negative means within limits."
+    }
+   }
+  },
+  {
+   "i": 46,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "assistant",
+   "data": {
+    "text": "I've confirmed the S1 freeze and its safety gap; now I'll request an inspection.",
+    "model": "muse-spark-1.3",
+    "turn": 6,
+    "tokens": {
+     "prompt_tokens": 7602,
+     "completion_tokens": 678,
+     "reasoning_tokens": 523
+    },
+    "costUsd": 0.01238,
+    "toolCalls": [
+     "request_action"
+    ]
+   }
+  },
+  {
+   "i": 47,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "request_action",
+    "args": {
+     "action": {
+      "kind": "dispatch_human_check"
+     },
+     "reason": "S1 (sole Rack A temp) exactly flat 26.77C for ~12-15min, lost coverage so Rack A safety unknown. Diagnose mostly nominal but cannot prove safe. Dispatch is inspection/repair in simulation, not proven prevention, restores coverage and helps if hidden vent fault."
+    }
+   }
+  },
+  {
+   "i": 48,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "request_action",
+    "ok": true,
+    "result": {
+     "status": "needs_input",
+     "message": "Passed the safety gate. Waiting for human approval before anything is applied.",
+     "expected_improvement_c": 1.03,
+     "worst_plausible_improvement_c": 0
+    }
+   }
+  },
+  {
+   "i": 49,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "gate",
+   "data": {
+    "allowed": true,
+    "checks": [
+     {
+      "name": "in_catalog",
+      "pass": true,
+      "detail": "action is in the catalog and its arguments validate"
+     },
+     {
+      "name": "horizon_bound",
+      "pass": true,
+      "detail": "prediction horizon 90 min is within 120 min"
+     },
+     {
+      "name": "simulated_first",
+      "pass": true,
+      "detail": "tested 2 distinct actions in simulation"
+     },
+     {
+      "name": "not_repeat_refusal",
+      "pass": true,
+      "detail": "this action has not been refused before"
+     },
+     {
+      "name": "check_warranted",
+      "pass": true,
+      "detail": "human check is warranted (suspect sensors: none; P(hazard)=0.15; P(fault)=0.22)"
+     }
+    ],
+    "reasons": [],
+    "expectedImprovementC": 1.03,
+    "worstCaseImprovementC": 0
+   }
+  },
+  {
+   "i": 50,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "approval",
+   "data": {
+    "decision": "approved",
+    "mode": "auto-simulated",
+    "by": "simulated operator (auto-approved in this recording)"
+   }
+  },
+  {
+   "i": 51,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "applied",
+   "data": {
+    "action": {
+     "kind": "dispatch_human_check"
+    },
+    "tApplyMin": 61.5
+   }
+  },
+  {
+   "i": 52,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "assistant",
+   "data": {
+    "text": "S1 (Rack A temperature) is stuck at 26.77°C — flat for ~15 min. That means we have no visibility into Rack A, not that Rack A is safe.\n\nOther sensors look normal and models favor no fault, but a hidden vent blockage can't be ruled out without that coverage.\n\nRequested and approved: human inspection/repair of S1 / Rack A zone. Info-level sensor issue only, no thermal breach forecast yet.\n",
+    "model": "muse-spark-1.3",
+    "turn": 7,
+    "tokens": {
+     "prompt_tokens": 7802,
+     "completion_tokens": 113,
+     "reasoning_tokens": 12
+    },
+    "costUsd": 0.01023,
+    "toolCalls": []
+   }
+  },
+  {
+   "i": 53,
+   "tMin": 49.5,
+   "invocation": 1,
+   "kind": "summary",
+   "data": {
+    "text": "S1 (Rack A temperature) is stuck at 26.77°C — flat for ~15 min. That means we have no visibility into Rack A, not that Rack A is safe.\n\nOther sensors look normal and models favor no fault, but a hidden vent blockage can't be ruled out without that coverage.\n\nRequested and approved: human inspection/repair of S1 / Rack A zone. Info-level sensor issue only, no thermal breach forecast yet.\n",
+    "outcome": "applied"
+   }
+  },
+  {
+   "i": 54,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "trigger",
+   "data": {
+    "rule": "flat",
+    "detail": "sensor S1 has been exactly constant for 15 minutes"
+   }
+  },
+  {
+   "i": 55,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "assistant",
+   "data": {
+    "text": "Re-checking the room after that flat sensor — refreshing what changed.",
+    "model": "muse-spark-1.3",
+    "turn": 1,
+    "tokens": {
+     "prompt_tokens": 3003,
+     "completion_tokens": 110,
+     "reasoning_tokens": 50
+    },
+    "costUsd": 0.00422,
+    "toolCalls": [
+     "list_sensors"
+    ]
+   }
+  },
+  {
+   "i": 56,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "list_sensors",
+    "args": {}
+   }
+  },
+  {
+   "i": 57,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "list_sensors",
+    "ok": true,
+    "result": {
+     "now_min_since_monitoring_started": 209.5,
+     "sensors": [
+      {
+       "id": "S1",
+       "label": "Rack A inlet temperature",
+       "location": "Rack A (hot aisle side)",
+       "kind": "temperature",
+       "unit": "°C"
+      },
+      {
+       "id": "S2",
+       "label": "Desk row 1 air temperature",
+       "location": "Desk row 1",
+       "kind": "temperature",
+       "unit": "°C"
+      },
+      {
+       "id": "S3",
+       "label": "Return air temperature",
+       "location": "AC return duct",
+       "kind": "temperature",
+       "unit": "°C"
+      },
+      {
+       "id": "M1",
+       "label": "UPS total power",
+       "location": "UPS output (all loads)",
+       "kind": "power",
+       "unit": "kW"
+      },
+      {
+       "id": "M2",
+       "label": "Rack B power-strip voltage drop",
+       "location": "Rack B feed, strip vs. panel",
+       "kind": "voltage_drop",
+       "unit": "mV"
+      }
+     ],
+     "note": "Everything else in the room is unobserved. Limits are simulated thresholds."
+    }
+   }
+  },
+  {
+   "i": 58,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "assistant",
+   "data": {
+    "text": "Listing shows the same five sensors — now pulling fresh readings and health.",
+    "model": "muse-spark-1.3",
+    "turn": 2,
+    "tokens": {
+     "prompt_tokens": 3267,
+     "completion_tokens": 273,
+     "reasoning_tokens": 8
+    },
+    "costUsd": 0.00524,
+    "toolCalls": [
+     "sensor_metadata",
+     "sensor_metadata",
+     "sensor_metadata",
+     "sensor_metadata",
+     "sensor_metadata"
+    ]
+   }
+  },
+  {
+   "i": 59,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "S1"
+    }
+   }
+  },
+  {
+   "i": 60,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "S1",
+     "label": "Rack A inlet temperature",
+     "location": "Rack A (hot aisle side)",
+     "unit": "°C",
+     "nominal_noise_sigma": 0.3,
+     "last_calibration_days_ago": 374,
+     "std_last_20min": 0,
+     "flat_suspect": true
+    }
+   }
+  },
+  {
+   "i": 61,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "S2"
+    }
+   }
+  },
+  {
+   "i": 62,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "S2",
+     "label": "Desk row 1 air temperature",
+     "location": "Desk row 1",
+     "unit": "°C",
+     "nominal_noise_sigma": 0.3,
+     "last_calibration_days_ago": 171,
+     "std_last_20min": 0.2588,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 63,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "S3"
+    }
+   }
+  },
+  {
+   "i": 64,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "S3",
+     "label": "Return air temperature",
+     "location": "AC return duct",
+     "unit": "°C",
+     "nominal_noise_sigma": 0.3,
+     "last_calibration_days_ago": 366,
+     "std_last_20min": 0.353,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 65,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "M1"
+    }
+   }
+  },
+  {
+   "i": 66,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "M1",
+     "label": "UPS total power",
+     "location": "UPS output (all loads)",
+     "unit": "kW",
+     "nominal_noise_sigma": 0.04,
+     "last_calibration_days_ago": null,
+     "std_last_20min": 0.0538,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 67,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "M2"
+    }
+   }
+  },
+  {
+   "i": 68,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "M2",
+     "label": "Rack B power-strip voltage drop",
+     "location": "Rack B feed, strip vs. panel",
+     "unit": "mV",
+     "nominal_noise_sigma": 15,
+     "last_calibration_days_ago": null,
+     "std_last_20min": 14.513,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 69,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "assistant",
+   "data": {
+    "text": "S1 is confirmed flat/stuck; others look healthy. Gathering current values and trends.",
+    "model": "muse-spark-1.3",
+    "turn": 3,
+    "tokens": {
+     "prompt_tokens": 3934,
+     "completion_tokens": 553,
+     "reasoning_tokens": 14
+    },
+    "costUsd": 0.00727,
+    "toolCalls": [
+     "get_reading",
+     "get_reading",
+     "get_reading",
+     "get_reading",
+     "get_reading",
+     "get_history",
+     "get_history",
+     "get_history",
+     "get_history"
+    ]
+   }
+  },
+  {
+   "i": 70,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "S1"
+    }
+   }
+  },
+  {
+   "i": 71,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "S1",
+     "t_min": 209.5,
+     "value": 26.77,
+     "unit": "°C"
+    }
+   }
+  },
+  {
+   "i": 72,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "S2"
+    }
+   }
+  },
+  {
+   "i": 73,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "S2",
+     "t_min": 209.5,
+     "value": 26.51,
+     "unit": "°C"
+    }
+   }
+  },
+  {
+   "i": 74,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "S3"
+    }
+   }
+  },
+  {
+   "i": 75,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "S3",
+     "t_min": 209.5,
+     "value": 22.75,
+     "unit": "°C"
+    }
+   }
+  },
+  {
+   "i": 76,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "M1"
+    }
+   }
+  },
+  {
+   "i": 77,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "M1",
+     "t_min": 209.5,
+     "value": 4.59,
+     "unit": "kW"
+    }
+   }
+  },
+  {
+   "i": 78,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "M2"
+    }
+   }
+  },
+  {
+   "i": 79,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "M2",
+     "t_min": 209.5,
+     "value": 83.05,
+     "unit": "mV"
+    }
+   }
+  },
+  {
+   "i": 80,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "S2",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 81,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "S2",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 60,
+       "value": 26.16
+      },
+      {
+       "t_min_ago": 56,
+       "value": 26.72
+      },
+      {
+       "t_min_ago": 52,
+       "value": 26.37
+      },
+      {
+       "t_min_ago": 48,
+       "value": 26.63
+      },
+      {
+       "t_min_ago": 44,
+       "value": 26.46
+      },
+      {
+       "t_min_ago": 40,
+       "value": 26.49
+      },
+      {
+       "t_min_ago": 36,
+       "value": 26.04
+      },
+      {
+       "t_min_ago": 32,
+       "value": 26.41
+      },
+      {
+       "t_min_ago": 28,
+       "value": 26.52
+      },
+      {
+       "t_min_ago": 24,
+       "value": 26.67
+      },
+      {
+       "t_min_ago": 20,
+       "value": 26.28
+      },
+      {
+       "t_min_ago": 16,
+       "value": 26.46
+      },
+      {
+       "t_min_ago": 12,
+       "value": 26.93
+      },
+      {
+       "t_min_ago": 8,
+       "value": 26.48
+      },
+      {
+       "t_min_ago": 4,
+       "value": 26.44
+      },
+      {
+       "t_min_ago": 0,
+       "value": 26.51
+      }
+     ],
+     "min": 25.76,
+     "max": 27.38,
+     "trend_per_10min": 0.01
+    }
+   }
+  },
+  {
+   "i": 82,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "S3",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 83,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "S3",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 60,
+       "value": 23.25
+      },
+      {
+       "t_min_ago": 56,
+       "value": 23.32
+      },
+      {
+       "t_min_ago": 52,
+       "value": 23.76
+      },
+      {
+       "t_min_ago": 48,
+       "value": 23.8
+      },
+      {
+       "t_min_ago": 44,
+       "value": 23.57
+      },
+      {
+       "t_min_ago": 40,
+       "value": 23.9
+      },
+      {
+       "t_min_ago": 36,
+       "value": 23.7
+      },
+      {
+       "t_min_ago": 32,
+       "value": 23.93
+      },
+      {
+       "t_min_ago": 28,
+       "value": 23.87
+      },
+      {
+       "t_min_ago": 24,
+       "value": 23.31
+      },
+      {
+       "t_min_ago": 20,
+       "value": 24.13
+      },
+      {
+       "t_min_ago": 16,
+       "value": 23.51
+      },
+      {
+       "t_min_ago": 12,
+       "value": 23.22
+      },
+      {
+       "t_min_ago": 8,
+       "value": 23.83
+      },
+      {
+       "t_min_ago": 4,
+       "value": 23.34
+      },
+      {
+       "t_min_ago": 0,
+       "value": 22.75
+      }
+     ],
+     "min": 22.75,
+     "max": 24.4,
+     "trend_per_10min": 0.006
+    }
+   }
+  },
+  {
+   "i": 84,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "M1",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 85,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "M1",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 60,
+       "value": 4.52
+      },
+      {
+       "t_min_ago": 56,
+       "value": 4.48
+      },
+      {
+       "t_min_ago": 52,
+       "value": 4.5
+      },
+      {
+       "t_min_ago": 48,
+       "value": 4.53
+      },
+      {
+       "t_min_ago": 44,
+       "value": 4.56
+      },
+      {
+       "t_min_ago": 40,
+       "value": 4.61
+      },
+      {
+       "t_min_ago": 36,
+       "value": 4.62
+      },
+      {
+       "t_min_ago": 32,
+       "value": 4.57
+      },
+      {
+       "t_min_ago": 28,
+       "value": 4.6
+      },
+      {
+       "t_min_ago": 24,
+       "value": 4.65
+      },
+      {
+       "t_min_ago": 20,
+       "value": 4.63
+      },
+      {
+       "t_min_ago": 16,
+       "value": 4.57
+      },
+      {
+       "t_min_ago": 12,
+       "value": 4.56
+      },
+      {
+       "t_min_ago": 8,
+       "value": 4.61
+      },
+      {
+       "t_min_ago": 4,
+       "value": 4.45
+      },
+      {
+       "t_min_ago": 0,
+       "value": 4.59
+      }
+     ],
+     "min": 4.44,
+     "max": 4.69,
+     "trend_per_10min": 0.01
+    }
+   }
+  },
+  {
+   "i": 86,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "M2",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 87,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "M2",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 60,
+       "value": 86.49
+      },
+      {
+       "t_min_ago": 56,
+       "value": 62.18
+      },
+      {
+       "t_min_ago": 52,
+       "value": 85.76
+      },
+      {
+       "t_min_ago": 48,
+       "value": 61.61
+      },
+      {
+       "t_min_ago": 44,
+       "value": 92.08
+      },
+      {
+       "t_min_ago": 40,
+       "value": 66.73
+      },
+      {
+       "t_min_ago": 36,
+       "value": 105.9
+      },
+      {
+       "t_min_ago": 32,
+       "value": 78.19
+      },
+      {
+       "t_min_ago": 28,
+       "value": 74.76
+      },
+      {
+       "t_min_ago": 24,
+       "value": 69.3
+      },
+      {
+       "t_min_ago": 20,
+       "value": 83.47
+      },
+      {
+       "t_min_ago": 16,
+       "value": 47.75
+      },
+      {
+       "t_min_ago": 12,
+       "value": 72.81
+      },
+      {
+       "t_min_ago": 8,
+       "value": 92.36
+      },
+      {
+       "t_min_ago": 4,
+       "value": 61.26
+      },
+      {
+       "t_min_ago": 0,
+       "value": 83.05
+      }
+     ],
+     "min": 40.99,
+     "max": 114.95,
+     "trend_per_10min": 1.892
+    }
+   }
+  },
+  {
+   "i": 88,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "assistant",
+   "data": {
+    "text": "Other sensors show normal trends, but Rack A is blind — I'll run diagnosis and hidden-zone checks.",
+    "model": "muse-spark-1.3",
+    "turn": 4,
+    "tokens": {
+     "prompt_tokens": 5756,
+     "completion_tokens": 190,
+     "reasoning_tokens": 85
+    },
+    "costUsd": 0.008,
+    "toolCalls": [
+     "diagnose",
+     "estimate_hidden_zones"
+    ]
+   }
+  },
+  {
+   "i": 89,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "diagnose",
+    "args": {}
+   }
+  },
+  {
+   "i": 90,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "diagnose",
+    "ok": true,
+    "result": {
+     "t_min": 209.5,
+     "model_adequate": true,
+     "chi2_per_dof": 0.7,
+     "sensors_excluded_from_fit": [
+      "S1"
+     ],
+     "observation_coverage": {
+      "untrusted_sensors": [
+       "S1"
+      ],
+      "unobserved_due_to_sensor_failure": [
+       "rackA"
+      ],
+      "inspection_warranted": true,
+      "note": "Normal readings elsewhere cannot establish that a zone with a failed sensor is safe. A dispatched human check inspects and repairs existing faults in this simulation."
+     },
+     "forecast_uncertainty": {
+      "probabilities_are_calibrated": false,
+      "interpretation": "Probabilities are relative weights within fitted hypotheses, not measured probabilities of safety. Missing fault dynamics can make all hypotheses wrong."
+     },
+     "p_fault": 1,
+     "hypotheses": [
+      {
+       "family": "load_rackB",
+       "posterior": 1,
+       "description": "Rack B load increased to ~1.23x nominal, ~161 min ago"
+      },
+      {
+       "family": "none",
+       "posterior": 0,
+       "description": "No fault: readings are explained by the nominal model"
+      },
+      {
+       "family": "ac",
+       "posterior": 0,
+       "description": "AC cooling capacity degrading (up to 30% lost, ramp ~154 min), onset ~5 min ago"
+      },
+      {
+       "family": "vent_rackA",
+       "posterior": 0,
+       "description": "Rack A vent/airflow blocked (up to 38%), onset ~5 min ago"
+      }
+     ],
+     "if_nothing_is_done_90min": {
+      "p_hazard_within_alert_margin": 0,
+      "p_breach": 0,
+      "expected_peak_margin_c": -5.6,
+      "worst_plausible_peak_margin_c": -5.6,
+      "median_time_to_limit_min": null,
+      "alert_margin_c": 3
+     },
+     "note": "Hypothesis posteriors are tempered because residuals are autocorrelated. Early in a fault several hypotheses can fit; prefer actions that work under all of them."
+    }
+   }
+  },
+  {
+   "i": 91,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "estimate_hidden_zones",
+    "args": {}
+   }
+  },
+  {
+   "i": 92,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "estimate_hidden_zones",
+    "ok": true,
+    "result": {
+     "t_min": 209.5,
+     "zones": [
+      {
+       "zone": "rackB",
+       "estimate_c": 28.3,
+       "sigma_c": 2,
+       "simulated_limit_c": 35,
+       "margin_to_limit_c": 6.7
+      },
+      {
+       "zone": "desk2",
+       "estimate_c": 26.3,
+       "sigma_c": 0.2,
+       "simulated_limit_c": 32,
+       "margin_to_limit_c": 5.7
+      },
+      {
+       "zone": "conn",
+       "estimate_c": 29.8,
+       "sigma_c": 2.4,
+       "simulated_limit_c": 70,
+       "margin_to_limit_c": 40.2
+      }
+     ],
+     "caveats": [
+      "Regression trained on simulated scenarios; its error is larger for faults that barely disturb the visible sensors (for example a blocked vent on rack B).",
+      "Sensors flagged flat: S1. This estimate uses them and may be unreliable."
+     ]
+    }
+   }
+  },
+  {
+   "i": 93,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "assistant",
+   "data": {
+    "text": "Diagnosis points to a Rack B load increase but no breach yet, with Rack A unobserved — I'll test inspection versus load-reduction options.",
+    "model": "muse-spark-1.3",
+    "turn": 5,
+    "tokens": {
+     "prompt_tokens": 6435,
+     "completion_tokens": 761,
+     "reasoning_tokens": 571
+    },
+    "costUsd": 0.01128,
+    "toolCalls": [
+     "simulate_action",
+     "simulate_action"
+    ]
+   }
+  },
+  {
+   "i": 94,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "simulate_action",
+    "args": {
+     "action": {
+      "kind": "dispatch_human_check"
+     },
+     "horizon_min": 60
+    }
+   }
+  },
+  {
+   "i": 95,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "simulate_action",
+    "ok": true,
+    "result": {
+     "action": {
+      "kind": "dispatch_human_check"
+     },
+     "takes_effect_in_min": 12,
+     "horizon_min": 60,
+     "do_nothing": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -5.6,
+      "worst_plausible_peak_margin_c": -5.6,
+      "median_time_to_limit_min": null
+     },
+     "with_action": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -5.6,
+      "worst_plausible_peak_margin_c": -5.6,
+      "median_time_to_limit_min": null
+     },
+     "per_hypothesis": [
+      {
+       "family": "load_rackB",
+       "weight": 0.532,
+       "peak_margin_c_do_nothing": -5.6,
+       "peak_margin_c_with_action": -5.6,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "load_rackB",
+       "weight": 0.313,
+       "peak_margin_c_do_nothing": -5.6,
+       "peak_margin_c_with_action": -5.6,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "load_rackB",
+       "weight": 0.155,
+       "peak_margin_c_do_nothing": -5.6,
+       "peak_margin_c_with_action": -5.6,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      }
+     ],
+     "reading_guide": "peak_margin_c = hottest (zone temperature - its limit) over the horizon; negative means within limits."
+    }
+   }
+  },
+  {
+   "i": 96,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "simulate_action",
+    "args": {
+     "action": {
+      "kind": "shed_noncritical_load"
+     },
+     "horizon_min": 60
+    }
+   }
+  },
+  {
+   "i": 97,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "simulate_action",
+    "ok": true,
+    "result": {
+     "action": {
+      "kind": "shed_noncritical_load"
+     },
+     "takes_effect_in_min": 3,
+     "horizon_min": 60,
+     "do_nothing": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -5.6,
+      "worst_plausible_peak_margin_c": -5.6,
+      "median_time_to_limit_min": null
+     },
+     "with_action": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -5.6,
+      "worst_plausible_peak_margin_c": -5.6,
+      "median_time_to_limit_min": null
+     },
+     "per_hypothesis": [
+      {
+       "family": "load_rackB",
+       "weight": 0.532,
+       "peak_margin_c_do_nothing": -5.6,
+       "peak_margin_c_with_action": -5.6,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "load_rackB",
+       "weight": 0.313,
+       "peak_margin_c_do_nothing": -5.6,
+       "peak_margin_c_with_action": -5.6,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "load_rackB",
+       "weight": 0.155,
+       "peak_margin_c_do_nothing": -5.6,
+       "peak_margin_c_with_action": -5.6,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      }
+     ],
+     "reading_guide": "peak_margin_c = hottest (zone temperature - its limit) over the horizon; negative means within limits."
+    }
+   }
+  },
+  {
+   "i": 98,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "assistant",
+   "data": {
+    "text": "No thermal hazard forecast at this time — sensor coverage issue remains.\n\n- S1 Rack-A temp still stuck at 26.77C, std 0 / flat_suspect true. That is lost coverage of Rack A, not evidence Rack A is safe.\n- S2, S3, M1, M2 fresh and normal with no trend: Desk1 ~26.5C, Return ~22.8C, UPS ~4.59kW stable, Rack-B drop noisy ~83mV with no sustained rise.\n- Cross-check hidden-zone regression: rackB 28.3C margin -6.7C, desk2 26.3C margin -5.7C, connector 29.8C margin -40.2C — all within simulated limits, but flagged unreliable because S1 is flat.\n- Physics twin: load_rackB ~1.23x posterior 1.0, p_breach 0, peak margin -5.6C over 90min. No breach plausible, so no warn/critical.\n- Tested dispatch_human_check and shed_noncritical_load for 60min: both do-nothing vs with-action -5.6C, p_breach 0. Dispatch is inspection/repair in the simulation, not proven thermal prevention.\n\nA human check/inspection for S1 / Rack-A was already approved and pending — do-nothing now means no additional action until it takes effect. No new action requested. Info-level sensor fault only.\n",
+    "model": "muse-spark-1.3",
+    "turn": 6,
+    "tokens": {
+     "prompt_tokens": 7253,
+     "completion_tokens": 1020,
+     "reasoning_tokens": 703
+    },
+    "costUsd": 0.0134,
+    "toolCalls": []
+   }
+  },
+  {
+   "i": 99,
+   "tMin": 209.5,
+   "invocation": 2,
+   "kind": "summary",
+   "data": {
+    "text": "No thermal hazard forecast at this time — sensor coverage issue remains.\n\n- S1 Rack-A temp still stuck at 26.77C, std 0 / flat_suspect true. That is lost coverage of Rack A, not evidence Rack A is safe.\n- S2, S3, M1, M2 fresh and normal with no trend: Desk1 ~26.5C, Return ~22.8C, UPS ~4.59kW stable, Rack-B drop noisy ~83mV with no sustained rise.\n- Cross-check hidden-zone regression: rackB 28.3C margin -6.7C, desk2 26.3C margin -5.7C, connector 29.8C margin -40.2C — all within simulated limits, but flagged unreliable because S1 is flat.\n- Physics twin: load_rackB ~1.23x posterior 1.0, p_breach 0, peak margin -5.6C over 90min. No breach plausible, so no warn/critical.\n- Tested dispatch_human_check and shed_noncritical_load for 60min: both do-nothing vs with-action -5.6C, p_breach 0. Dispatch is inspection/repair in the simulation, not proven thermal prevention.\n\nA human check/inspection for S1 / Rack-A was already approved and pending — do-nothing now means no additional action until it takes effect. No new action requested. Info-level sensor fault only.\n",
+    "outcome": "investigating"
+   }
+  }
+ ]
+}

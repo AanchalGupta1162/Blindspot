@@ -1,0 +1,7916 @@
+{
+ "schemaVersion": 1,
+ "id": "research-v3-muse-spark-1.3-unattended_ac-3002-llm",
+ "source": "llm",
+ "model": "muse-spark-1.3",
+ "label": "LLM agent (muse-spark-1.3) with the same tools and safety gate",
+ "headline": "alert at 105 min; limit would be breached at 148 min without action; no limit breach with the action.",
+ "createdAt": "2026-11-04T19:25:59.311Z",
+ "simulated": true,
+ "scenario": {
+  "kind": "unattended_ac",
+  "seed": 3002,
+  "startHour": 18.3,
+  "durationMin": 240,
+  "onsetMin": 46.016666666666666
+ },
+ "trigger": {
+  "tMin": 59.5,
+  "rule": "residual",
+  "detail": "UPS power is 0.63 kW above the nominal expectation"
+ },
+ "invocations": 6,
+ "status": "applied",
+ "alertMin": 105,
+ "action": {
+  "action": {
+   "kind": "power_cap_rack",
+   "rack": "rackB",
+   "fraction": 0.6
+  },
+  "reason": "AC fault posterior 1.0, S1 up 1.5C in 15min to 29.4C, 90min worst margin -0.2C. Cap rackB 0.6 improves margin 1.2-1.7C under every hypothesis in 60min sim.",
+  "tApplyMin": 121,
+  "approvalDelayMin": 15
+ },
+ "actions": [
+  {
+   "action": {
+    "kind": "power_cap_rack",
+    "rack": "rackB",
+    "fraction": 0.6
+   },
+   "reason": "AC fault posterior 1.0, S1 up 1.5C in 15min to 29.4C, 90min worst margin -0.2C. Cap rackB 0.6 improves margin 1.2-1.7C under every hypothesis in 60min sim.",
+   "tApplyMin": 121,
+   "approvalDelayMin": 15
+  },
+  {
+   "action": {
+    "kind": "switch_backup_cooling",
+    "zone": "rackA"
+   },
+   "reason": "AC fault posterior 1.0 worsening (93% lost), breach p=1 in ~34min despite rackB cap. Backup cooling tested: peak margin +1.2 to -0.9, p_breach 0 under all hypotheses.",
+   "tApplyMin": 156,
+   "approvalDelayMin": 15
+  }
+ ],
+ "approval": {
+  "decision": "approved",
+  "mode": "auto-simulated",
+  "by": "simulated operator (auto-approved in this recording)"
+ },
+ "outcome": {
+  "doNothing": {
+   "limitExceeded": true,
+   "firstBreachMin": 147.5,
+   "firstBreachNode": "rackB",
+   "degreeMinutesAboveLimit": 510.82,
+   "peakMarginC": 5.71
+  },
+  "withAction": {
+   "limitExceeded": false,
+   "firstBreachMin": null,
+   "firstBreachNode": null,
+   "degreeMinutesAboveLimit": 0,
+   "peakMarginC": -0.62
+  },
+  "peakMarginImprovementC": 6.33,
+  "degreeMinutesSaved": 510.82
+ },
+ "usage": {
+  "inputTokens": 222887,
+  "outputTokens": 17683,
+  "reasoningTokens": 8425,
+  "costUsd": 0.3538,
+  "turns": 40,
+  "models": [
+   "muse-spark-1.3"
+  ]
+ },
+ "events": [
+  {
+   "i": 0,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "trigger",
+   "data": {
+    "rule": "residual",
+    "detail": "UPS power is 0.63 kW above the nominal expectation"
+   }
+  },
+  {
+   "i": 1,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "assistant",
+   "data": {
+    "text": "Investigating the UPS power drift — checking sensor coverage first.",
+    "model": "muse-spark-1.3",
+    "turn": 1,
+    "tokens": {
+     "prompt_tokens": 2801,
+     "completion_tokens": 360,
+     "reasoning_tokens": 62
+    },
+    "costUsd": 0.00503,
+    "toolCalls": [
+     "list_sensors",
+     "sensor_metadata",
+     "sensor_metadata",
+     "sensor_metadata",
+     "sensor_metadata",
+     "sensor_metadata"
+    ]
+   }
+  },
+  {
+   "i": 2,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "list_sensors",
+    "args": {}
+   }
+  },
+  {
+   "i": 3,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "list_sensors",
+    "ok": true,
+    "result": {
+     "now_min_since_monitoring_started": 59.5,
+     "sensors": [
+      {
+       "id": "S1",
+       "label": "Rack A inlet temperature",
+       "location": "Rack A (hot aisle side)",
+       "kind": "temperature",
+       "unit": "°C"
+      },
+      {
+       "id": "S2",
+       "label": "Desk row 1 air temperature",
+       "location": "Desk row 1",
+       "kind": "temperature",
+       "unit": "°C"
+      },
+      {
+       "id": "S3",
+       "label": "Return air temperature",
+       "location": "AC return duct",
+       "kind": "temperature",
+       "unit": "°C"
+      },
+      {
+       "id": "M1",
+       "label": "UPS total power",
+       "location": "UPS output (all loads)",
+       "kind": "power",
+       "unit": "kW"
+      },
+      {
+       "id": "M2",
+       "label": "Rack B power-strip voltage drop",
+       "location": "Rack B feed, strip vs. panel",
+       "kind": "voltage_drop",
+       "unit": "mV"
+      }
+     ],
+     "note": "Everything else in the room is unobserved. Limits are simulated thresholds."
+    }
+   }
+  },
+  {
+   "i": 4,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "S1"
+    }
+   }
+  },
+  {
+   "i": 5,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "S1",
+     "label": "Rack A inlet temperature",
+     "location": "Rack A (hot aisle side)",
+     "unit": "°C",
+     "nominal_noise_sigma": 0.3,
+     "last_calibration_days_ago": 374,
+     "std_last_20min": 0.3361,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 6,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "S2"
+    }
+   }
+  },
+  {
+   "i": 7,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "S2",
+     "label": "Desk row 1 air temperature",
+     "location": "Desk row 1",
+     "unit": "°C",
+     "nominal_noise_sigma": 0.3,
+     "last_calibration_days_ago": 196,
+     "std_last_20min": 0.2831,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 8,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "S3"
+    }
+   }
+  },
+  {
+   "i": 9,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "S3",
+     "label": "Return air temperature",
+     "location": "AC return duct",
+     "unit": "°C",
+     "nominal_noise_sigma": 0.3,
+     "last_calibration_days_ago": 244,
+     "std_last_20min": 0.2851,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 10,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "M1"
+    }
+   }
+  },
+  {
+   "i": 11,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "M1",
+     "label": "UPS total power",
+     "location": "UPS output (all loads)",
+     "unit": "kW",
+     "nominal_noise_sigma": 0.04,
+     "last_calibration_days_ago": null,
+     "std_last_20min": 0.2157,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 12,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "M2"
+    }
+   }
+  },
+  {
+   "i": 13,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "M2",
+     "label": "Rack B power-strip voltage drop",
+     "location": "Rack B feed, strip vs. panel",
+     "unit": "mV",
+     "nominal_noise_sigma": 15,
+     "last_calibration_days_ago": null,
+     "std_last_20min": 19.1457,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 14,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "assistant",
+   "data": {
+    "text": "Sensors look healthy. Now pulling the current readings and recent history.",
+    "model": "muse-spark-1.3",
+    "turn": 2,
+    "tokens": {
+     "prompt_tokens": 3713,
+     "completion_tokens": 286,
+     "reasoning_tokens": 12
+    },
+    "costUsd": 0.00586,
+    "toolCalls": [
+     "get_reading",
+     "get_reading",
+     "get_reading",
+     "get_reading",
+     "get_reading"
+    ]
+   }
+  },
+  {
+   "i": 15,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "S1"
+    }
+   }
+  },
+  {
+   "i": 16,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "S1",
+     "t_min": 59.5,
+     "value": 26.76,
+     "unit": "°C"
+    }
+   }
+  },
+  {
+   "i": 17,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "S2"
+    }
+   }
+  },
+  {
+   "i": 18,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "S2",
+     "t_min": 59.5,
+     "value": 22.02,
+     "unit": "°C"
+    }
+   }
+  },
+  {
+   "i": 19,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "S3"
+    }
+   }
+  },
+  {
+   "i": 20,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "S3",
+     "t_min": 59.5,
+     "value": 22.43,
+     "unit": "°C"
+    }
+   }
+  },
+  {
+   "i": 21,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "M1"
+    }
+   }
+  },
+  {
+   "i": 22,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "M1",
+     "t_min": 59.5,
+     "value": 4.02,
+     "unit": "kW"
+    }
+   }
+  },
+  {
+   "i": 23,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "M2"
+    }
+   }
+  },
+  {
+   "i": 24,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "M2",
+     "t_min": 59.5,
+     "value": 117.93,
+     "unit": "mV"
+    }
+   }
+  },
+  {
+   "i": 25,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "assistant",
+   "data": {
+    "text": "Pulling recent trends to see what's driving the elevated power draw.",
+    "model": "muse-spark-1.3",
+    "turn": 3,
+    "tokens": {
+     "prompt_tokens": 4214,
+     "completion_tokens": 345,
+     "reasoning_tokens": 6
+    },
+    "costUsd": 0.00673,
+    "toolCalls": [
+     "get_history",
+     "get_history",
+     "get_history",
+     "get_history",
+     "get_history"
+    ]
+   }
+  },
+  {
+   "i": 26,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "M1",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 27,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "M1",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 56,
+       "value": 3.3
+      },
+      {
+       "t_min_ago": 52,
+       "value": 3.33
+      },
+      {
+       "t_min_ago": 48,
+       "value": 3.45
+      },
+      {
+       "t_min_ago": 44,
+       "value": 3.55
+      },
+      {
+       "t_min_ago": 40,
+       "value": 3.44
+      },
+      {
+       "t_min_ago": 36,
+       "value": 3.44
+      },
+      {
+       "t_min_ago": 32,
+       "value": 3.6
+      },
+      {
+       "t_min_ago": 28,
+       "value": 3.56
+      },
+      {
+       "t_min_ago": 24,
+       "value": 3.56
+      },
+      {
+       "t_min_ago": 20,
+       "value": 3.45
+      },
+      {
+       "t_min_ago": 16,
+       "value": 3.48
+      },
+      {
+       "t_min_ago": 12,
+       "value": 3.47
+      },
+      {
+       "t_min_ago": 8,
+       "value": 3.38
+      },
+      {
+       "t_min_ago": 4,
+       "value": 3.88
+      },
+      {
+       "t_min_ago": 0,
+       "value": 4.02
+      }
+     ],
+     "min": 3.3,
+     "max": 4.07,
+     "trend_per_10min": 0.047
+    }
+   }
+  },
+  {
+   "i": 28,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "M2",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 29,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "M2",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 56,
+       "value": 88.45
+      },
+      {
+       "t_min_ago": 52,
+       "value": 45.11
+      },
+      {
+       "t_min_ago": 48,
+       "value": 63.19
+      },
+      {
+       "t_min_ago": 44,
+       "value": 59.61
+      },
+      {
+       "t_min_ago": 40,
+       "value": 64.97
+      },
+      {
+       "t_min_ago": 36,
+       "value": 70.75
+      },
+      {
+       "t_min_ago": 32,
+       "value": 72.37
+      },
+      {
+       "t_min_ago": 28,
+       "value": 77.63
+      },
+      {
+       "t_min_ago": 24,
+       "value": 82.19
+      },
+      {
+       "t_min_ago": 20,
+       "value": 91.97
+      },
+      {
+       "t_min_ago": 16,
+       "value": 76.76
+      },
+      {
+       "t_min_ago": 12,
+       "value": 75.63
+      },
+      {
+       "t_min_ago": 8,
+       "value": 89.03
+      },
+      {
+       "t_min_ago": 4,
+       "value": 83.25
+      },
+      {
+       "t_min_ago": 0,
+       "value": 117.93
+      }
+     ],
+     "min": 42.99,
+     "max": 136.08,
+     "trend_per_10min": 1.488
+    }
+   }
+  },
+  {
+   "i": 30,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "S1",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 31,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "S1",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 56,
+       "value": 27.1
+      },
+      {
+       "t_min_ago": 52,
+       "value": 26.52
+      },
+      {
+       "t_min_ago": 48,
+       "value": 26.43
+      },
+      {
+       "t_min_ago": 44,
+       "value": 25.9
+      },
+      {
+       "t_min_ago": 40,
+       "value": 26.53
+      },
+      {
+       "t_min_ago": 36,
+       "value": 26.23
+      },
+      {
+       "t_min_ago": 32,
+       "value": 26.54
+      },
+      {
+       "t_min_ago": 28,
+       "value": 26.8
+      },
+      {
+       "t_min_ago": 24,
+       "value": 26.69
+      },
+      {
+       "t_min_ago": 20,
+       "value": 26.39
+      },
+      {
+       "t_min_ago": 16,
+       "value": 26.69
+      },
+      {
+       "t_min_ago": 12,
+       "value": 26.29
+      },
+      {
+       "t_min_ago": 8,
+       "value": 26.37
+      },
+      {
+       "t_min_ago": 4,
+       "value": 26.76
+      },
+      {
+       "t_min_ago": 0,
+       "value": 26.76
+      }
+     ],
+     "min": 25.9,
+     "max": 27.56,
+     "trend_per_10min": 0.062
+    }
+   }
+  },
+  {
+   "i": 32,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "S2",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 33,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "S2",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 56,
+       "value": 21.67
+      },
+      {
+       "t_min_ago": 52,
+       "value": 22.21
+      },
+      {
+       "t_min_ago": 48,
+       "value": 21.71
+      },
+      {
+       "t_min_ago": 44,
+       "value": 22.15
+      },
+      {
+       "t_min_ago": 40,
+       "value": 21.91
+      },
+      {
+       "t_min_ago": 36,
+       "value": 22.05
+      },
+      {
+       "t_min_ago": 32,
+       "value": 21.57
+      },
+      {
+       "t_min_ago": 28,
+       "value": 21.79
+      },
+      {
+       "t_min_ago": 24,
+       "value": 21.57
+      },
+      {
+       "t_min_ago": 20,
+       "value": 21.86
+      },
+      {
+       "t_min_ago": 16,
+       "value": 21.5
+      },
+      {
+       "t_min_ago": 12,
+       "value": 21.95
+      },
+      {
+       "t_min_ago": 8,
+       "value": 21.85
+      },
+      {
+       "t_min_ago": 4,
+       "value": 22.09
+      },
+      {
+       "t_min_ago": 0,
+       "value": 22.02
+      }
+     ],
+     "min": 21.19,
+     "max": 22.74,
+     "trend_per_10min": 0.031
+    }
+   }
+  },
+  {
+   "i": 34,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "S3",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 35,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "S3",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 56,
+       "value": 22.04
+      },
+      {
+       "t_min_ago": 52,
+       "value": 22.56
+      },
+      {
+       "t_min_ago": 48,
+       "value": 22.2
+      },
+      {
+       "t_min_ago": 44,
+       "value": 22.32
+      },
+      {
+       "t_min_ago": 40,
+       "value": 22.42
+      },
+      {
+       "t_min_ago": 36,
+       "value": 22.53
+      },
+      {
+       "t_min_ago": 32,
+       "value": 22.51
+      },
+      {
+       "t_min_ago": 28,
+       "value": 22.53
+      },
+      {
+       "t_min_ago": 24,
+       "value": 22.39
+      },
+      {
+       "t_min_ago": 20,
+       "value": 22.11
+      },
+      {
+       "t_min_ago": 16,
+       "value": 22.34
+      },
+      {
+       "t_min_ago": 12,
+       "value": 22.01
+      },
+      {
+       "t_min_ago": 8,
+       "value": 22.58
+      },
+      {
+       "t_min_ago": 4,
+       "value": 22.29
+      },
+      {
+       "t_min_ago": 0,
+       "value": 22.43
+      }
+     ],
+     "min": 21.7,
+     "max": 23.18,
+     "trend_per_10min": 0.034
+    }
+   }
+  },
+  {
+   "i": 36,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "assistant",
+   "data": {
+    "text": "Power and voltage drop both spiking while temperatures hold steady — testing fault hypotheses for hidden areas.",
+    "model": "muse-spark-1.3",
+    "turn": 4,
+    "tokens": {
+     "prompt_tokens": 5815,
+     "completion_tokens": 170,
+     "reasoning_tokens": 66
+    },
+    "costUsd": 0.00799,
+    "toolCalls": [
+     "diagnose",
+     "estimate_hidden_zones"
+    ]
+   }
+  },
+  {
+   "i": 37,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "diagnose",
+    "args": {}
+   }
+  },
+  {
+   "i": 38,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "diagnose",
+    "ok": true,
+    "result": {
+     "t_min": 59.5,
+     "model_adequate": true,
+     "chi2_per_dof": 0.98,
+     "sensors_excluded_from_fit": [],
+     "observation_coverage": {
+      "untrusted_sensors": [],
+      "unobserved_due_to_sensor_failure": [],
+      "inspection_warranted": false,
+      "note": "Normal readings elsewhere cannot establish that a zone with a failed sensor is safe. A dispatched human check inspects and repairs existing faults in this simulation."
+     },
+     "forecast_uncertainty": {
+      "probabilities_are_calibrated": false,
+      "interpretation": "Probabilities are relative weights within fitted hypotheses, not measured probabilities of safety. Missing fault dynamics can make all hypotheses wrong.",
+      "empirical_upper_allowance_c": 16.32,
+      "worst_plausible_peak_margin_plus_allowance_c": 12.2,
+      "calibration_scenarios": 28,
+      "held_out_scenarios_covered": "12/14",
+      "scope": "Untreated 90-minute forecasts at monitoring minutes 60 and 90; not validated for post-intervention forecasts.",
+      "note": "Empirical one-sided upper residual allowance, using a max-over-checkpoints score per scenario. Calibration seeds are separate from estimator training and the published evaluation. Coverage assumptions may fail under dependent scenarios or distribution shift; this is not a real-world safety guarantee. It does not modify or bypass gate checks."
+     },
+     "p_fault": 1,
+     "hypotheses": [
+      {
+       "family": "load_rackB",
+       "posterior": 1,
+       "description": "Rack B load increased to ~1.34x nominal, ~5 min ago"
+      },
+      {
+       "family": "none",
+       "posterior": 0,
+       "description": "No fault: readings are explained by the nominal model"
+      },
+      {
+       "family": "ac",
+       "posterior": 0,
+       "description": "AC cooling capacity degrading (up to 41% lost, ramp ~140 min), onset ~44 min ago"
+      },
+      {
+       "family": "vent_rackA",
+       "posterior": 0,
+       "description": "Rack A vent/airflow blocked (up to 39%), onset ~36 min ago"
+      }
+     ],
+     "if_nothing_is_done_90min": {
+      "p_hazard_within_alert_margin": 0,
+      "p_breach": 0,
+      "expected_peak_margin_c": -4.3,
+      "worst_plausible_peak_margin_c": -4.1,
+      "median_time_to_limit_min": null,
+      "alert_margin_c": 3
+     },
+     "note": "Hypothesis posteriors are tempered because residuals are autocorrelated. Early in a fault several hypotheses can fit; prefer actions that work under all of them."
+    }
+   }
+  },
+  {
+   "i": 39,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "estimate_hidden_zones",
+    "args": {}
+   }
+  },
+  {
+   "i": 40,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "estimate_hidden_zones",
+    "ok": true,
+    "result": {
+     "t_min": 59.5,
+     "zones": [
+      {
+       "zone": "rackB",
+       "estimate_c": 30.9,
+       "sigma_c": 2,
+       "simulated_limit_c": 35,
+       "margin_to_limit_c": 4.1
+      },
+      {
+       "zone": "desk2",
+       "estimate_c": 22.3,
+       "sigma_c": 0.2,
+       "simulated_limit_c": 32,
+       "margin_to_limit_c": 9.7
+      },
+      {
+       "zone": "conn",
+       "estimate_c": 33.4,
+       "sigma_c": 2.4,
+       "simulated_limit_c": 70,
+       "margin_to_limit_c": 36.6
+      }
+     ],
+     "caveats": [
+      "Regression trained on simulated scenarios; its error is larger for faults that barely disturb the visible sensors (for example a blocked vent on rack B)."
+     ]
+    }
+   }
+  },
+  {
+   "i": 41,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "assistant",
+   "data": {
+    "text": "Diagnosis points to a Rack B load surge — now modeling responses to find the safest effective option.",
+    "model": "muse-spark-1.3",
+    "turn": 5,
+    "tokens": {
+     "prompt_tokens": 6600,
+     "completion_tokens": 419,
+     "reasoning_tokens": 225
+    },
+    "costUsd": 0.01003,
+    "toolCalls": [
+     "simulate_action",
+     "simulate_action"
+    ]
+   }
+  },
+  {
+   "i": 42,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "simulate_action",
+    "args": {
+     "action": {
+      "kind": "power_cap_rack",
+      "rack": "rackB",
+      "fraction": 0.8
+     },
+     "horizon_min": 60
+    }
+   }
+  },
+  {
+   "i": 43,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "simulate_action",
+    "ok": true,
+    "result": {
+     "action": {
+      "kind": "power_cap_rack",
+      "rack": "rackB",
+      "fraction": 0.8
+     },
+     "takes_effect_in_min": 16,
+     "horizon_min": 60,
+     "do_nothing": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -4.4,
+      "worst_plausible_peak_margin_c": -4.2,
+      "median_time_to_limit_min": null
+     },
+     "with_action": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -5.4,
+      "worst_plausible_peak_margin_c": -5.2,
+      "median_time_to_limit_min": null
+     },
+     "per_hypothesis": [
+      {
+       "family": "load_rackB",
+       "weight": 0.201,
+       "peak_margin_c_do_nothing": -4.4,
+       "peak_margin_c_with_action": -5.4,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "load_rackB",
+       "weight": 0.201,
+       "peak_margin_c_do_nothing": -4.4,
+       "peak_margin_c_with_action": -5.4,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "load_rackB",
+       "weight": 0.201,
+       "peak_margin_c_do_nothing": -4.4,
+       "peak_margin_c_with_action": -5.4,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "load_rackB",
+       "weight": 0.177,
+       "peak_margin_c_do_nothing": -4.2,
+       "peak_margin_c_with_action": -5.2,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "load_rackB",
+       "weight": 0.141,
+       "peak_margin_c_do_nothing": -4.6,
+       "peak_margin_c_with_action": -5.5,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "load_rackB",
+       "weight": 0.079,
+       "peak_margin_c_do_nothing": -4.8,
+       "peak_margin_c_with_action": -5.6,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      }
+     ],
+     "reading_guide": "peak_margin_c = hottest (zone temperature - its limit) over the horizon; negative means within limits."
+    }
+   }
+  },
+  {
+   "i": 44,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_call",
+   "data": {
+    "name": "simulate_action",
+    "args": {
+     "action": {
+      "kind": "dispatch_human_check"
+     },
+     "horizon_min": 60
+    }
+   }
+  },
+  {
+   "i": 45,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "tool_result",
+   "data": {
+    "name": "simulate_action",
+    "ok": true,
+    "result": {
+     "action": {
+      "kind": "dispatch_human_check"
+     },
+     "takes_effect_in_min": 60,
+     "horizon_min": 60,
+     "do_nothing": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -4.4,
+      "worst_plausible_peak_margin_c": -4.2,
+      "median_time_to_limit_min": null
+     },
+     "with_action": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -4.4,
+      "worst_plausible_peak_margin_c": -4.2,
+      "median_time_to_limit_min": null
+     },
+     "per_hypothesis": [
+      {
+       "family": "load_rackB",
+       "weight": 0.201,
+       "peak_margin_c_do_nothing": -4.4,
+       "peak_margin_c_with_action": -4.4,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "load_rackB",
+       "weight": 0.201,
+       "peak_margin_c_do_nothing": -4.4,
+       "peak_margin_c_with_action": -4.4,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "load_rackB",
+       "weight": 0.201,
+       "peak_margin_c_do_nothing": -4.4,
+       "peak_margin_c_with_action": -4.4,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "load_rackB",
+       "weight": 0.177,
+       "peak_margin_c_do_nothing": -4.2,
+       "peak_margin_c_with_action": -4.2,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "load_rackB",
+       "weight": 0.141,
+       "peak_margin_c_do_nothing": -4.6,
+       "peak_margin_c_with_action": -4.6,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "load_rackB",
+       "weight": 0.079,
+       "peak_margin_c_do_nothing": -4.8,
+       "peak_margin_c_with_action": -4.8,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      }
+     ],
+     "reading_guide": "peak_margin_c = hottest (zone temperature - its limit) over the horizon; negative means within limits."
+    }
+   }
+  },
+  {
+   "i": 46,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "assistant",
+   "data": {
+    "text": "No thermal hazard developing at this time.\n\nAll 5 sensors trusted (none flat). Trigger was UPS power +0.63kW: M1 jumped 3.4->4.0 kW in last ~8 min, M2 voltage-drop also rose to ~118 mV. Temperatures flat: S1 ~26.7C, S2 ~22.0C, S3 ~22.4C.\n\nDiagnose: load_rackB posterior 1.0 (~1.34x nominal, onset ~5 min ago), model adequate. Hidden estimate: rackB ~30.9C margin 4.1C to 35C limit, desk2 and connector well within limits. 90-min forecast if nothing done: p_breach 0, expected peak margin -4.3C, worst plausible -4.1C.\n\nTested power_cap_rackB 0.8 and dispatch_human_check: both keep margins negative, no breach to prevent, so no action meets the gate for intervention. Allowance +12.2C upper bound is uncertainty only, not a forecast breach.\n\nConclusion: increased Rack B load confirmed but thermally benign in simulation. No action requested, no alert. Continue monitoring; re-investigate if power/temperatures rise further.\n",
+    "model": "muse-spark-1.3",
+    "turn": 6,
+    "tokens": {
+     "prompt_tokens": 7750,
+     "completion_tokens": 824,
+     "reasoning_tokens": 552
+    },
+    "costUsd": 0.01319,
+    "toolCalls": []
+   }
+  },
+  {
+   "i": 47,
+   "tMin": 59.5,
+   "invocation": 1,
+   "kind": "summary",
+   "data": {
+    "text": "No thermal hazard developing at this time.\n\nAll 5 sensors trusted (none flat). Trigger was UPS power +0.63kW: M1 jumped 3.4->4.0 kW in last ~8 min, M2 voltage-drop also rose to ~118 mV. Temperatures flat: S1 ~26.7C, S2 ~22.0C, S3 ~22.4C.\n\nDiagnose: load_rackB posterior 1.0 (~1.34x nominal, onset ~5 min ago), model adequate. Hidden estimate: rackB ~30.9C margin 4.1C to 35C limit, desk2 and connector well within limits. 90-min forecast if nothing done: p_breach 0, expected peak margin -4.3C, worst plausible -4.1C.\n\nTested power_cap_rackB 0.8 and dispatch_human_check: both keep margins negative, no breach to prevent, so no action meets the gate for intervention. Allowance +12.2C upper bound is uncertainty only, not a forecast breach.\n\nConclusion: increased Rack B load confirmed but thermally benign in simulation. No action requested, no alert. Continue monitoring; re-investigate if power/temperatures rise further.\n",
+    "outcome": "investigating"
+   }
+  },
+  {
+   "i": 48,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "trigger",
+   "data": {
+    "rule": "residual",
+    "detail": "S3 is 1.2 C above the nominal expectation"
+   }
+  },
+  {
+   "i": 49,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "assistant",
+   "data": {
+    "text": "Investigating the S3 drift — pulling fresh sensor data.",
+    "model": "muse-spark-1.3",
+    "turn": 1,
+    "tokens": {
+     "prompt_tokens": 3126,
+     "completion_tokens": 626,
+     "reasoning_tokens": 78
+    },
+    "costUsd": 0.00657,
+    "toolCalls": [
+     "list_sensors",
+     "sensor_metadata",
+     "sensor_metadata",
+     "sensor_metadata",
+     "sensor_metadata",
+     "sensor_metadata",
+     "get_reading",
+     "get_reading",
+     "get_reading",
+     "get_reading",
+     "get_reading"
+    ]
+   }
+  },
+  {
+   "i": 50,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "list_sensors",
+    "args": {}
+   }
+  },
+  {
+   "i": 51,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "list_sensors",
+    "ok": true,
+    "result": {
+     "now_min_since_monitoring_started": 75,
+     "sensors": [
+      {
+       "id": "S1",
+       "label": "Rack A inlet temperature",
+       "location": "Rack A (hot aisle side)",
+       "kind": "temperature",
+       "unit": "°C"
+      },
+      {
+       "id": "S2",
+       "label": "Desk row 1 air temperature",
+       "location": "Desk row 1",
+       "kind": "temperature",
+       "unit": "°C"
+      },
+      {
+       "id": "S3",
+       "label": "Return air temperature",
+       "location": "AC return duct",
+       "kind": "temperature",
+       "unit": "°C"
+      },
+      {
+       "id": "M1",
+       "label": "UPS total power",
+       "location": "UPS output (all loads)",
+       "kind": "power",
+       "unit": "kW"
+      },
+      {
+       "id": "M2",
+       "label": "Rack B power-strip voltage drop",
+       "location": "Rack B feed, strip vs. panel",
+       "kind": "voltage_drop",
+       "unit": "mV"
+      }
+     ],
+     "note": "Everything else in the room is unobserved. Limits are simulated thresholds."
+    }
+   }
+  },
+  {
+   "i": 52,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "S1"
+    }
+   }
+  },
+  {
+   "i": 53,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "S1",
+     "label": "Rack A inlet temperature",
+     "location": "Rack A (hot aisle side)",
+     "unit": "°C",
+     "nominal_noise_sigma": 0.3,
+     "last_calibration_days_ago": 374,
+     "std_last_20min": 0.3512,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 54,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "S2"
+    }
+   }
+  },
+  {
+   "i": 55,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "S2",
+     "label": "Desk row 1 air temperature",
+     "location": "Desk row 1",
+     "unit": "°C",
+     "nominal_noise_sigma": 0.3,
+     "last_calibration_days_ago": 196,
+     "std_last_20min": 0.3597,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 56,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "S3"
+    }
+   }
+  },
+  {
+   "i": 57,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "S3",
+     "label": "Return air temperature",
+     "location": "AC return duct",
+     "unit": "°C",
+     "nominal_noise_sigma": 0.3,
+     "last_calibration_days_ago": 244,
+     "std_last_20min": 0.4323,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 58,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "M1"
+    }
+   }
+  },
+  {
+   "i": 59,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "M1",
+     "label": "UPS total power",
+     "location": "UPS output (all loads)",
+     "unit": "kW",
+     "nominal_noise_sigma": 0.04,
+     "last_calibration_days_ago": null,
+     "std_last_20min": 0.1914,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 60,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "M2"
+    }
+   }
+  },
+  {
+   "i": 61,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "M2",
+     "label": "Rack B power-strip voltage drop",
+     "location": "Rack B feed, strip vs. panel",
+     "unit": "mV",
+     "nominal_noise_sigma": 15,
+     "last_calibration_days_ago": null,
+     "std_last_20min": 18.2509,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 62,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "S1"
+    }
+   }
+  },
+  {
+   "i": 63,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "S1",
+     "t_min": 75,
+     "value": 27.1,
+     "unit": "°C"
+    }
+   }
+  },
+  {
+   "i": 64,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "S2"
+    }
+   }
+  },
+  {
+   "i": 65,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "S2",
+     "t_min": 75,
+     "value": 22.59,
+     "unit": "°C"
+    }
+   }
+  },
+  {
+   "i": 66,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "S3"
+    }
+   }
+  },
+  {
+   "i": 67,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "S3",
+     "t_min": 75,
+     "value": 23.9,
+     "unit": "°C"
+    }
+   }
+  },
+  {
+   "i": 68,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "M1"
+    }
+   }
+  },
+  {
+   "i": 69,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "M1",
+     "t_min": 75,
+     "value": 3.5,
+     "unit": "kW"
+    }
+   }
+  },
+  {
+   "i": 70,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "M2"
+    }
+   }
+  },
+  {
+   "i": 71,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "M2",
+     "t_min": 75,
+     "value": 101.21,
+     "unit": "mV"
+    }
+   }
+  },
+  {
+   "i": 72,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "assistant",
+   "data": {
+    "text": "Power readings shifted since the last check — pulling history to see the trend.",
+    "model": "muse-spark-1.3",
+    "turn": 2,
+    "tokens": {
+     "prompt_tokens": 4506,
+     "completion_tokens": 381,
+     "reasoning_tokens": 30
+    },
+    "costUsd": 0.00725,
+    "toolCalls": [
+     "get_history",
+     "get_history",
+     "get_history",
+     "get_history",
+     "get_history"
+    ]
+   }
+  },
+  {
+   "i": 73,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "S3",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 74,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "S3",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 60,
+       "value": 22.36
+      },
+      {
+       "t_min_ago": 56,
+       "value": 22.78
+      },
+      {
+       "t_min_ago": 52,
+       "value": 22.3
+      },
+      {
+       "t_min_ago": 48,
+       "value": 22.26
+      },
+      {
+       "t_min_ago": 44,
+       "value": 22.54
+      },
+      {
+       "t_min_ago": 40,
+       "value": 22.11
+      },
+      {
+       "t_min_ago": 36,
+       "value": 22.53
+      },
+      {
+       "t_min_ago": 32,
+       "value": 22.24
+      },
+      {
+       "t_min_ago": 28,
+       "value": 22.14
+      },
+      {
+       "t_min_ago": 24,
+       "value": 22.46
+      },
+      {
+       "t_min_ago": 20,
+       "value": 21.91
+      },
+      {
+       "t_min_ago": 16,
+       "value": 22.31
+      },
+      {
+       "t_min_ago": 12,
+       "value": 22.56
+      },
+      {
+       "t_min_ago": 8,
+       "value": 23.07
+      },
+      {
+       "t_min_ago": 4,
+       "value": 23.18
+      },
+      {
+       "t_min_ago": 0,
+       "value": 23.9
+      }
+     ],
+     "min": 21.74,
+     "max": 23.9,
+     "trend_per_10min": 0.096
+    }
+   }
+  },
+  {
+   "i": 75,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "M1",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 76,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "M1",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 60,
+       "value": 3.59
+      },
+      {
+       "t_min_ago": 56,
+       "value": 3.5
+      },
+      {
+       "t_min_ago": 52,
+       "value": 3.42
+      },
+      {
+       "t_min_ago": 48,
+       "value": 3.53
+      },
+      {
+       "t_min_ago": 44,
+       "value": 3.54
+      },
+      {
+       "t_min_ago": 40,
+       "value": 3.56
+      },
+      {
+       "t_min_ago": 36,
+       "value": 3.57
+      },
+      {
+       "t_min_ago": 32,
+       "value": 3.51
+      },
+      {
+       "t_min_ago": 28,
+       "value": 3.44
+      },
+      {
+       "t_min_ago": 24,
+       "value": 3.41
+      },
+      {
+       "t_min_ago": 20,
+       "value": 3.52
+      },
+      {
+       "t_min_ago": 16,
+       "value": 4.07
+      },
+      {
+       "t_min_ago": 12,
+       "value": 3.95
+      },
+      {
+       "t_min_ago": 8,
+       "value": 3.93
+      },
+      {
+       "t_min_ago": 4,
+       "value": 3.6
+      },
+      {
+       "t_min_ago": 0,
+       "value": 3.5
+      }
+     ],
+     "min": 3.38,
+     "max": 4.07,
+     "trend_per_10min": 0.067
+    }
+   }
+  },
+  {
+   "i": 77,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "M2",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 78,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "M2",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 60,
+       "value": 76.74
+      },
+      {
+       "t_min_ago": 56,
+       "value": 66.09
+      },
+      {
+       "t_min_ago": 52,
+       "value": 97.9
+      },
+      {
+       "t_min_ago": 48,
+       "value": 97.33
+      },
+      {
+       "t_min_ago": 44,
+       "value": 105.86
+      },
+      {
+       "t_min_ago": 40,
+       "value": 93.22
+      },
+      {
+       "t_min_ago": 36,
+       "value": 76.85
+      },
+      {
+       "t_min_ago": 32,
+       "value": 88.32
+      },
+      {
+       "t_min_ago": 28,
+       "value": 76
+      },
+      {
+       "t_min_ago": 24,
+       "value": 85.96
+      },
+      {
+       "t_min_ago": 20,
+       "value": 68.04
+      },
+      {
+       "t_min_ago": 16,
+       "value": 114.13
+      },
+      {
+       "t_min_ago": 12,
+       "value": 110.43
+      },
+      {
+       "t_min_ago": 8,
+       "value": 91.54
+      },
+      {
+       "t_min_ago": 4,
+       "value": 84.97
+      },
+      {
+       "t_min_ago": 0,
+       "value": 101.21
+      }
+     ],
+     "min": 58.21,
+     "max": 136.08,
+     "trend_per_10min": 3.803
+    }
+   }
+  },
+  {
+   "i": 79,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "S1",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 80,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "S1",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 60,
+       "value": 26.53
+      },
+      {
+       "t_min_ago": 56,
+       "value": 26.11
+      },
+      {
+       "t_min_ago": 52,
+       "value": 26.77
+      },
+      {
+       "t_min_ago": 48,
+       "value": 25.94
+      },
+      {
+       "t_min_ago": 44,
+       "value": 26.31
+      },
+      {
+       "t_min_ago": 40,
+       "value": 26.94
+      },
+      {
+       "t_min_ago": 36,
+       "value": 26.5
+      },
+      {
+       "t_min_ago": 32,
+       "value": 26.33
+      },
+      {
+       "t_min_ago": 28,
+       "value": 26.37
+      },
+      {
+       "t_min_ago": 24,
+       "value": 26.37
+      },
+      {
+       "t_min_ago": 20,
+       "value": 26.79
+      },
+      {
+       "t_min_ago": 16,
+       "value": 26.24
+      },
+      {
+       "t_min_ago": 12,
+       "value": 26.34
+      },
+      {
+       "t_min_ago": 8,
+       "value": 26.57
+      },
+      {
+       "t_min_ago": 4,
+       "value": 27.39
+      },
+      {
+       "t_min_ago": 0,
+       "value": 27.1
+      }
+     ],
+     "min": 25.9,
+     "max": 27.56,
+     "trend_per_10min": 0.07
+    }
+   }
+  },
+  {
+   "i": 81,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "S2",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 82,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "S2",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 60,
+       "value": 21.89
+      },
+      {
+       "t_min_ago": 56,
+       "value": 21.54
+      },
+      {
+       "t_min_ago": 52,
+       "value": 21.84
+      },
+      {
+       "t_min_ago": 48,
+       "value": 22.17
+      },
+      {
+       "t_min_ago": 44,
+       "value": 22.12
+      },
+      {
+       "t_min_ago": 40,
+       "value": 21.4
+      },
+      {
+       "t_min_ago": 36,
+       "value": 21.94
+      },
+      {
+       "t_min_ago": 32,
+       "value": 22.17
+      },
+      {
+       "t_min_ago": 28,
+       "value": 22.18
+      },
+      {
+       "t_min_ago": 24,
+       "value": 21.58
+      },
+      {
+       "t_min_ago": 20,
+       "value": 21.94
+      },
+      {
+       "t_min_ago": 16,
+       "value": 22.12
+      },
+      {
+       "t_min_ago": 12,
+       "value": 21.78
+      },
+      {
+       "t_min_ago": 8,
+       "value": 22.15
+      },
+      {
+       "t_min_ago": 4,
+       "value": 22.19
+      },
+      {
+       "t_min_ago": 0,
+       "value": 22.59
+      }
+     ],
+     "min": 21.19,
+     "max": 22.84,
+     "trend_per_10min": 0.041
+    }
+   }
+  },
+  {
+   "i": 83,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "assistant",
+   "data": {
+    "text": "Temperatures are climbing while total power normalised — running diagnostics on the hidden zones.",
+    "model": "muse-spark-1.3",
+    "turn": 3,
+    "tokens": {
+     "prompt_tokens": 6172,
+     "completion_tokens": 205,
+     "reasoning_tokens": 104
+    },
+    "costUsd": 0.00859,
+    "toolCalls": [
+     "diagnose",
+     "estimate_hidden_zones"
+    ]
+   }
+  },
+  {
+   "i": 84,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "diagnose",
+    "args": {}
+   }
+  },
+  {
+   "i": 85,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "diagnose",
+    "ok": true,
+    "result": {
+     "t_min": 75,
+     "model_adequate": true,
+     "chi2_per_dof": 1.3,
+     "sensors_excluded_from_fit": [],
+     "observation_coverage": {
+      "untrusted_sensors": [],
+      "unobserved_due_to_sensor_failure": [],
+      "inspection_warranted": false,
+      "note": "Normal readings elsewhere cannot establish that a zone with a failed sensor is safe. A dispatched human check inspects and repairs existing faults in this simulation."
+     },
+     "forecast_uncertainty": {
+      "probabilities_are_calibrated": false,
+      "interpretation": "Probabilities are relative weights within fitted hypotheses, not measured probabilities of safety. Missing fault dynamics can make all hypotheses wrong.",
+      "empirical_upper_allowance_c": 16.32,
+      "worst_plausible_peak_margin_plus_allowance_c": 11.5,
+      "calibration_scenarios": 28,
+      "held_out_scenarios_covered": "12/14",
+      "scope": "Untreated 90-minute forecasts at monitoring minutes 60 and 90; not validated for post-intervention forecasts.",
+      "note": "Empirical one-sided upper residual allowance, using a max-over-checkpoints score per scenario. Calibration seeds are separate from estimator training and the published evaluation. Coverage assumptions may fail under dependent scenarios or distribution shift; this is not a real-world safety guarantee. It does not modify or bypass gate checks."
+     },
+     "p_fault": 1,
+     "hypotheses": [
+      {
+       "family": "load_rackB",
+       "posterior": 1,
+       "description": "Rack B load increased to ~1.27x nominal, ~20 min ago"
+      },
+      {
+       "family": "none",
+       "posterior": 0,
+       "description": "No fault: readings are explained by the nominal model"
+      },
+      {
+       "family": "ac",
+       "posterior": 0,
+       "description": "AC cooling capacity degrading (up to 95% lost, ramp ~154 min), onset ~48 min ago"
+      },
+      {
+       "family": "vent_rackA",
+       "posterior": 0,
+       "description": "Rack A vent/airflow blocked (up to 48%), onset ~48 min ago"
+      }
+     ],
+     "if_nothing_is_done_90min": {
+      "p_hazard_within_alert_margin": 0,
+      "p_breach": 0,
+      "expected_peak_margin_c": -4.8,
+      "worst_plausible_peak_margin_c": -4.8,
+      "median_time_to_limit_min": null,
+      "alert_margin_c": 3
+     },
+     "note": "Hypothesis posteriors are tempered because residuals are autocorrelated. Early in a fault several hypotheses can fit; prefer actions that work under all of them."
+    }
+   }
+  },
+  {
+   "i": 86,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "estimate_hidden_zones",
+    "args": {}
+   }
+  },
+  {
+   "i": 87,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "estimate_hidden_zones",
+    "ok": true,
+    "result": {
+     "t_min": 75,
+     "zones": [
+      {
+       "zone": "rackB",
+       "estimate_c": 29.3,
+       "sigma_c": 2,
+       "simulated_limit_c": 35,
+       "margin_to_limit_c": 5.7
+      },
+      {
+       "zone": "desk2",
+       "estimate_c": 22.5,
+       "sigma_c": 0.2,
+       "simulated_limit_c": 32,
+       "margin_to_limit_c": 9.5
+      },
+      {
+       "zone": "conn",
+       "estimate_c": 30.4,
+       "sigma_c": 2.4,
+       "simulated_limit_c": 70,
+       "margin_to_limit_c": 39.6
+      }
+     ],
+     "caveats": [
+      "Regression trained on simulated scenarios; its error is larger for faults that barely disturb the visible sensors (for example a blocked vent on rack B)."
+     ]
+    }
+   }
+  },
+  {
+   "i": 88,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "assistant",
+   "data": {
+    "text": "No breach is forecast, but I'll verify that intervention isn't warranted by testing candidate actions.",
+    "model": "muse-spark-1.3",
+    "turn": 4,
+    "tokens": {
+     "prompt_tokens": 6950,
+     "completion_tokens": 749,
+     "reasoning_tokens": 557
+    },
+    "costUsd": 0.01187,
+    "toolCalls": [
+     "simulate_action",
+     "simulate_action"
+    ]
+   }
+  },
+  {
+   "i": 89,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "simulate_action",
+    "args": {
+     "action": {
+      "kind": "power_cap_rack",
+      "rack": "rackB",
+      "fraction": 0.8
+     },
+     "horizon_min": 60
+    }
+   }
+  },
+  {
+   "i": 90,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "simulate_action",
+    "ok": true,
+    "result": {
+     "action": {
+      "kind": "power_cap_rack",
+      "rack": "rackB",
+      "fraction": 0.8
+     },
+     "takes_effect_in_min": 16,
+     "horizon_min": 60,
+     "do_nothing": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -4.9,
+      "worst_plausible_peak_margin_c": -4.8,
+      "median_time_to_limit_min": null
+     },
+     "with_action": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -5.3,
+      "worst_plausible_peak_margin_c": -5.2,
+      "median_time_to_limit_min": null
+     },
+     "per_hypothesis": [
+      {
+       "family": "load_rackB",
+       "weight": 0.355,
+       "peak_margin_c_do_nothing": -4.9,
+       "peak_margin_c_with_action": -5.3,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "load_rackB",
+       "weight": 0.33,
+       "peak_margin_c_do_nothing": -4.8,
+       "peak_margin_c_with_action": -5.2,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "load_rackB",
+       "weight": 0.266,
+       "peak_margin_c_do_nothing": -5,
+       "peak_margin_c_with_action": -5.3,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "load_rackB",
+       "weight": 0.026,
+       "peak_margin_c_do_nothing": -4.9,
+       "peak_margin_c_with_action": -5.2,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "load_rackB",
+       "weight": 0.023,
+       "peak_margin_c_do_nothing": -5,
+       "peak_margin_c_with_action": -5.4,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      }
+     ],
+     "reading_guide": "peak_margin_c = hottest (zone temperature - its limit) over the horizon; negative means within limits."
+    }
+   }
+  },
+  {
+   "i": 91,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_call",
+   "data": {
+    "name": "simulate_action",
+    "args": {
+     "action": {
+      "kind": "dispatch_human_check"
+     },
+     "horizon_min": 60
+    }
+   }
+  },
+  {
+   "i": 92,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "tool_result",
+   "data": {
+    "name": "simulate_action",
+    "ok": true,
+    "result": {
+     "action": {
+      "kind": "dispatch_human_check"
+     },
+     "takes_effect_in_min": 60,
+     "horizon_min": 60,
+     "do_nothing": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -4.9,
+      "worst_plausible_peak_margin_c": -4.8,
+      "median_time_to_limit_min": null
+     },
+     "with_action": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -4.9,
+      "worst_plausible_peak_margin_c": -4.8,
+      "median_time_to_limit_min": null
+     },
+     "per_hypothesis": [
+      {
+       "family": "load_rackB",
+       "weight": 0.355,
+       "peak_margin_c_do_nothing": -4.9,
+       "peak_margin_c_with_action": -4.9,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "load_rackB",
+       "weight": 0.33,
+       "peak_margin_c_do_nothing": -4.8,
+       "peak_margin_c_with_action": -4.8,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "load_rackB",
+       "weight": 0.266,
+       "peak_margin_c_do_nothing": -5,
+       "peak_margin_c_with_action": -5,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "load_rackB",
+       "weight": 0.026,
+       "peak_margin_c_do_nothing": -4.9,
+       "peak_margin_c_with_action": -4.9,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "load_rackB",
+       "weight": 0.023,
+       "peak_margin_c_do_nothing": -5,
+       "peak_margin_c_with_action": -5,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      }
+     ],
+     "reading_guide": "peak_margin_c = hottest (zone temperature - its limit) over the horizon; negative means within limits."
+    }
+   }
+  },
+  {
+   "i": 93,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "assistant",
+   "data": {
+    "text": "No thermal hazard developing at this time.\n\nAll 5 sensors trusted (none flat/stuck). S3 rose to 23.9C (+~1.5C in last 20 min), S1 27.1C, S2 22.6C. M1 spiked to ~4.1kW ~16 min ago then fell back to 3.5kW; M2 ~101mV noisy.\n\nDiagnose: load_rackB posterior 1.0 (~1.27x nominal, onset ~20 min ago), model adequate. Hidden estimate: rackB ~29.3C, margin 5.7C to 35C limit; desk2 and connector well within limits. 60-90 min forecast if nothing done: p_breach 0, expected peak margin ~-4.9C.\n\nTested power_cap_rackB 0.8 and dispatch_human_check: both keep margins negative, no breach to prevent, so no intervention meets the gate. Allowance +16.3C is uncertainty only, not a forecast breach.\n\nConclusion: Rack B load increase explains S3 residual but thermally benign in simulation. No action requested, no alert. Continue monitoring; re-investigate if power/temperatures rise further.\n",
+    "model": "muse-spark-1.3",
+    "turn": 5,
+    "tokens": {
+     "prompt_tokens": 7980,
+     "completion_tokens": 683,
+     "reasoning_tokens": 413
+    },
+    "costUsd": 0.01288,
+    "toolCalls": []
+   }
+  },
+  {
+   "i": 94,
+   "tMin": 75,
+   "invocation": 2,
+   "kind": "summary",
+   "data": {
+    "text": "No thermal hazard developing at this time.\n\nAll 5 sensors trusted (none flat/stuck). S3 rose to 23.9C (+~1.5C in last 20 min), S1 27.1C, S2 22.6C. M1 spiked to ~4.1kW ~16 min ago then fell back to 3.5kW; M2 ~101mV noisy.\n\nDiagnose: load_rackB posterior 1.0 (~1.27x nominal, onset ~20 min ago), model adequate. Hidden estimate: rackB ~29.3C, margin 5.7C to 35C limit; desk2 and connector well within limits. 60-90 min forecast if nothing done: p_breach 0, expected peak margin ~-4.9C.\n\nTested power_cap_rackB 0.8 and dispatch_human_check: both keep margins negative, no breach to prevent, so no intervention meets the gate. Allowance +16.3C is uncertainty only, not a forecast breach.\n\nConclusion: Rack B load increase explains S3 residual but thermally benign in simulation. No action requested, no alert. Continue monitoring; re-investigate if power/temperatures rise further.\n",
+    "outcome": "investigating"
+   }
+  },
+  {
+   "i": 95,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "trigger",
+   "data": {
+    "rule": "residual",
+    "detail": "S1 is 1.4 C above the nominal expectation"
+   }
+  },
+  {
+   "i": 96,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "assistant",
+   "data": {
+    "text": "Investigating the S1 residual — refreshing sensor checks.",
+    "model": "muse-spark-1.3",
+    "turn": 1,
+    "tokens": {
+     "prompt_tokens": 3120,
+     "completion_tokens": 349,
+     "reasoning_tokens": 52
+    },
+    "costUsd": 0.00538,
+    "toolCalls": [
+     "list_sensors",
+     "sensor_metadata",
+     "sensor_metadata",
+     "sensor_metadata",
+     "sensor_metadata",
+     "sensor_metadata"
+    ]
+   }
+  },
+  {
+   "i": 97,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_call",
+   "data": {
+    "name": "list_sensors",
+    "args": {}
+   }
+  },
+  {
+   "i": 98,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_result",
+   "data": {
+    "name": "list_sensors",
+    "ok": true,
+    "result": {
+     "now_min_since_monitoring_started": 90,
+     "sensors": [
+      {
+       "id": "S1",
+       "label": "Rack A inlet temperature",
+       "location": "Rack A (hot aisle side)",
+       "kind": "temperature",
+       "unit": "°C"
+      },
+      {
+       "id": "S2",
+       "label": "Desk row 1 air temperature",
+       "location": "Desk row 1",
+       "kind": "temperature",
+       "unit": "°C"
+      },
+      {
+       "id": "S3",
+       "label": "Return air temperature",
+       "location": "AC return duct",
+       "kind": "temperature",
+       "unit": "°C"
+      },
+      {
+       "id": "M1",
+       "label": "UPS total power",
+       "location": "UPS output (all loads)",
+       "kind": "power",
+       "unit": "kW"
+      },
+      {
+       "id": "M2",
+       "label": "Rack B power-strip voltage drop",
+       "location": "Rack B feed, strip vs. panel",
+       "kind": "voltage_drop",
+       "unit": "mV"
+      }
+     ],
+     "note": "Everything else in the room is unobserved. Limits are simulated thresholds."
+    }
+   }
+  },
+  {
+   "i": 99,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "S1"
+    }
+   }
+  },
+  {
+   "i": 100,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "S1",
+     "label": "Rack A inlet temperature",
+     "location": "Rack A (hot aisle side)",
+     "unit": "°C",
+     "nominal_noise_sigma": 0.3,
+     "last_calibration_days_ago": 374,
+     "std_last_20min": 0.3861,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 101,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "S2"
+    }
+   }
+  },
+  {
+   "i": 102,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "S2",
+     "label": "Desk row 1 air temperature",
+     "location": "Desk row 1",
+     "unit": "°C",
+     "nominal_noise_sigma": 0.3,
+     "last_calibration_days_ago": 196,
+     "std_last_20min": 0.3471,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 103,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "S3"
+    }
+   }
+  },
+  {
+   "i": 104,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "S3",
+     "label": "Return air temperature",
+     "location": "AC return duct",
+     "unit": "°C",
+     "nominal_noise_sigma": 0.3,
+     "last_calibration_days_ago": 244,
+     "std_last_20min": 0.4173,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 105,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "M1"
+    }
+   }
+  },
+  {
+   "i": 106,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "M1",
+     "label": "UPS total power",
+     "location": "UPS output (all loads)",
+     "unit": "kW",
+     "nominal_noise_sigma": 0.04,
+     "last_calibration_days_ago": null,
+     "std_last_20min": 0.0857,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 107,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "M2"
+    }
+   }
+  },
+  {
+   "i": 108,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "M2",
+     "label": "Rack B power-strip voltage drop",
+     "location": "Rack B feed, strip vs. panel",
+     "unit": "mV",
+     "nominal_noise_sigma": 15,
+     "last_calibration_days_ago": null,
+     "std_last_20min": 17.2936,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 109,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "assistant",
+   "data": {
+    "text": "Sensors look healthy — now pulling current readings and trends.",
+    "model": "muse-spark-1.3",
+    "turn": 2,
+    "tokens": {
+     "prompt_tokens": 4029,
+     "completion_tokens": 278,
+     "reasoning_tokens": 6
+    },
+    "costUsd": 0.00622,
+    "toolCalls": [
+     "get_reading",
+     "get_reading",
+     "get_reading",
+     "get_reading",
+     "get_reading"
+    ]
+   }
+  },
+  {
+   "i": 110,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "S1"
+    }
+   }
+  },
+  {
+   "i": 111,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "S1",
+     "t_min": 90,
+     "value": 27.85,
+     "unit": "°C"
+    }
+   }
+  },
+  {
+   "i": 112,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "S2"
+    }
+   }
+  },
+  {
+   "i": 113,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "S2",
+     "t_min": 90,
+     "value": 22.61,
+     "unit": "°C"
+    }
+   }
+  },
+  {
+   "i": 114,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "S3"
+    }
+   }
+  },
+  {
+   "i": 115,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "S3",
+     "t_min": 90,
+     "value": 24.29,
+     "unit": "°C"
+    }
+   }
+  },
+  {
+   "i": 116,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "M1"
+    }
+   }
+  },
+  {
+   "i": 117,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "M1",
+     "t_min": 90,
+     "value": 3.53,
+     "unit": "kW"
+    }
+   }
+  },
+  {
+   "i": 118,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "M2"
+    }
+   }
+  },
+  {
+   "i": 119,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "M2",
+     "t_min": 90,
+     "value": 75.16,
+     "unit": "mV"
+    }
+   }
+  },
+  {
+   "i": 120,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "assistant",
+   "data": {
+    "text": "Readings updated — checking recent history for drift.",
+    "model": "muse-spark-1.3",
+    "turn": 3,
+    "tokens": {
+     "prompt_tokens": 4518,
+     "completion_tokens": 352,
+     "reasoning_tokens": 6
+    },
+    "costUsd": 0.00714,
+    "toolCalls": [
+     "get_history",
+     "get_history",
+     "get_history",
+     "get_history",
+     "get_history"
+    ]
+   }
+  },
+  {
+   "i": 121,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "S1",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 122,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "S1",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 60,
+       "value": 26.82
+      },
+      {
+       "t_min_ago": 56,
+       "value": 26.35
+      },
+      {
+       "t_min_ago": 52,
+       "value": 26.65
+      },
+      {
+       "t_min_ago": 48,
+       "value": 26.8
+      },
+      {
+       "t_min_ago": 44,
+       "value": 26.85
+      },
+      {
+       "t_min_ago": 40,
+       "value": 26.35
+      },
+      {
+       "t_min_ago": 36,
+       "value": 26.94
+      },
+      {
+       "t_min_ago": 32,
+       "value": 26.51
+      },
+      {
+       "t_min_ago": 28,
+       "value": 26.68
+      },
+      {
+       "t_min_ago": 24,
+       "value": 26.66
+      },
+      {
+       "t_min_ago": 20,
+       "value": 26.88
+      },
+      {
+       "t_min_ago": 16,
+       "value": 27.03
+      },
+      {
+       "t_min_ago": 12,
+       "value": 26.73
+      },
+      {
+       "t_min_ago": 8,
+       "value": 27.73
+      },
+      {
+       "t_min_ago": 4,
+       "value": 27.81
+      },
+      {
+       "t_min_ago": 0,
+       "value": 27.85
+      }
+     ],
+     "min": 26.01,
+     "max": 28.13,
+     "trend_per_10min": 0.181
+    }
+   }
+  },
+  {
+   "i": 123,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "S3",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 124,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "S3",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 60,
+       "value": 22.27
+      },
+      {
+       "t_min_ago": 56,
+       "value": 22.37
+      },
+      {
+       "t_min_ago": 52,
+       "value": 22.77
+      },
+      {
+       "t_min_ago": 48,
+       "value": 22.41
+      },
+      {
+       "t_min_ago": 44,
+       "value": 22.72
+      },
+      {
+       "t_min_ago": 40,
+       "value": 22.46
+      },
+      {
+       "t_min_ago": 36,
+       "value": 22.62
+      },
+      {
+       "t_min_ago": 32,
+       "value": 22.71
+      },
+      {
+       "t_min_ago": 28,
+       "value": 22.85
+      },
+      {
+       "t_min_ago": 24,
+       "value": 23.16
+      },
+      {
+       "t_min_ago": 20,
+       "value": 23.08
+      },
+      {
+       "t_min_ago": 16,
+       "value": 23.35
+      },
+      {
+       "t_min_ago": 12,
+       "value": 23.72
+      },
+      {
+       "t_min_ago": 8,
+       "value": 23.48
+      },
+      {
+       "t_min_ago": 4,
+       "value": 24.65
+      },
+      {
+       "t_min_ago": 0,
+       "value": 24.29
+      }
+     ],
+     "min": 21.84,
+     "max": 24.65,
+     "trend_per_10min": 0.288
+    }
+   }
+  },
+  {
+   "i": 125,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "M1",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 126,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "M1",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 60,
+       "value": 3.57
+      },
+      {
+       "t_min_ago": 56,
+       "value": 3.66
+      },
+      {
+       "t_min_ago": 52,
+       "value": 3.57
+      },
+      {
+       "t_min_ago": 48,
+       "value": 3.62
+      },
+      {
+       "t_min_ago": 44,
+       "value": 3.52
+      },
+      {
+       "t_min_ago": 40,
+       "value": 3.43
+      },
+      {
+       "t_min_ago": 36,
+       "value": 3.52
+      },
+      {
+       "t_min_ago": 32,
+       "value": 4
+      },
+      {
+       "t_min_ago": 28,
+       "value": 3.92
+      },
+      {
+       "t_min_ago": 24,
+       "value": 3.94
+      },
+      {
+       "t_min_ago": 20,
+       "value": 4.02
+      },
+      {
+       "t_min_ago": 16,
+       "value": 3.46
+      },
+      {
+       "t_min_ago": 12,
+       "value": 3.58
+      },
+      {
+       "t_min_ago": 8,
+       "value": 3.57
+      },
+      {
+       "t_min_ago": 4,
+       "value": 3.66
+      },
+      {
+       "t_min_ago": 0,
+       "value": 3.53
+      }
+     ],
+     "min": 3.38,
+     "max": 4.07,
+     "trend_per_10min": 0.037
+    }
+   }
+  },
+  {
+   "i": 127,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "M2",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 128,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "M2",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 60,
+       "value": 77.11
+      },
+      {
+       "t_min_ago": 56,
+       "value": 92.98
+      },
+      {
+       "t_min_ago": 52,
+       "value": 58.21
+      },
+      {
+       "t_min_ago": 48,
+       "value": 80.77
+      },
+      {
+       "t_min_ago": 44,
+       "value": 78.81
+      },
+      {
+       "t_min_ago": 40,
+       "value": 100.01
+      },
+      {
+       "t_min_ago": 36,
+       "value": 78.48
+      },
+      {
+       "t_min_ago": 32,
+       "value": 136.08
+      },
+      {
+       "t_min_ago": 28,
+       "value": 91.2
+      },
+      {
+       "t_min_ago": 24,
+       "value": 113.61
+      },
+      {
+       "t_min_ago": 20,
+       "value": 111.17
+      },
+      {
+       "t_min_ago": 16,
+       "value": 90.48
+      },
+      {
+       "t_min_ago": 12,
+       "value": 102.57
+      },
+      {
+       "t_min_ago": 8,
+       "value": 94.25
+      },
+      {
+       "t_min_ago": 4,
+       "value": 95.24
+      },
+      {
+       "t_min_ago": 0,
+       "value": 75.16
+      }
+     ],
+     "min": 41.1,
+     "max": 136.08,
+     "trend_per_10min": 2.106
+    }
+   }
+  },
+  {
+   "i": 129,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "S2",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 130,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "S2",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 60,
+       "value": 21.57
+      },
+      {
+       "t_min_ago": 56,
+       "value": 22.69
+      },
+      {
+       "t_min_ago": 52,
+       "value": 22.09
+      },
+      {
+       "t_min_ago": 48,
+       "value": 21.93
+      },
+      {
+       "t_min_ago": 44,
+       "value": 22.54
+      },
+      {
+       "t_min_ago": 40,
+       "value": 21.7
+      },
+      {
+       "t_min_ago": 36,
+       "value": 21.44
+      },
+      {
+       "t_min_ago": 32,
+       "value": 21.73
+      },
+      {
+       "t_min_ago": 28,
+       "value": 21.65
+      },
+      {
+       "t_min_ago": 24,
+       "value": 22.56
+      },
+      {
+       "t_min_ago": 20,
+       "value": 22.64
+      },
+      {
+       "t_min_ago": 16,
+       "value": 22.61
+      },
+      {
+       "t_min_ago": 12,
+       "value": 22.5
+      },
+      {
+       "t_min_ago": 8,
+       "value": 22.54
+      },
+      {
+       "t_min_ago": 4,
+       "value": 22.3
+      },
+      {
+       "t_min_ago": 0,
+       "value": 22.61
+      }
+     ],
+     "min": 21.19,
+     "max": 23.05,
+     "trend_per_10min": 0.083
+    }
+   }
+  },
+  {
+   "i": 131,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "assistant",
+   "data": {
+    "text": "History shows warming — running diagnostics on hidden zones.",
+    "model": "muse-spark-1.3",
+    "turn": 4,
+    "tokens": {
+     "prompt_tokens": 6179,
+     "completion_tokens": 103,
+     "reasoning_tokens": 8
+    },
+    "costUsd": 0.00816,
+    "toolCalls": [
+     "diagnose",
+     "estimate_hidden_zones"
+    ]
+   }
+  },
+  {
+   "i": 132,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_call",
+   "data": {
+    "name": "diagnose",
+    "args": {}
+   }
+  },
+  {
+   "i": 133,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_result",
+   "data": {
+    "name": "diagnose",
+    "ok": true,
+    "result": {
+     "t_min": 90,
+     "model_adequate": true,
+     "chi2_per_dof": 2.14,
+     "sensors_excluded_from_fit": [],
+     "observation_coverage": {
+      "untrusted_sensors": [],
+      "unobserved_due_to_sensor_failure": [],
+      "inspection_warranted": false,
+      "note": "Normal readings elsewhere cannot establish that a zone with a failed sensor is safe. A dispatched human check inspects and repairs existing faults in this simulation."
+     },
+     "forecast_uncertainty": {
+      "probabilities_are_calibrated": false,
+      "interpretation": "Probabilities are relative weights within fitted hypotheses, not measured probabilities of safety. Missing fault dynamics can make all hypotheses wrong.",
+      "empirical_upper_allowance_c": 16.32,
+      "worst_plausible_peak_margin_plus_allowance_c": 14.6,
+      "calibration_scenarios": 28,
+      "held_out_scenarios_covered": "12/14",
+      "scope": "Untreated 90-minute forecasts at monitoring minutes 60 and 90; not validated for post-intervention forecasts.",
+      "note": "Empirical one-sided upper residual allowance, using a max-over-checkpoints score per scenario. Calibration seeds are separate from estimator training and the published evaluation. Coverage assumptions may fail under dependent scenarios or distribution shift; this is not a real-world safety guarantee. It does not modify or bypass gate checks."
+     },
+     "p_fault": 1,
+     "hypotheses": [
+      {
+       "family": "ac",
+       "posterior": 1,
+       "description": "AC cooling capacity degrading (up to 62% lost, ramp ~50 min), onset ~49 min ago"
+      },
+      {
+       "family": "none",
+       "posterior": 0,
+       "description": "No fault: readings are explained by the nominal model"
+      },
+      {
+       "family": "vent_rackA",
+       "posterior": 0,
+       "description": "Rack A vent/airflow blocked (up to 77%), onset ~59 min ago"
+      },
+      {
+       "family": "vent_rackB",
+       "posterior": 0,
+       "description": "Rack B vent/airflow blocked (up to 95%), onset ~73 min ago"
+      }
+     ],
+     "if_nothing_is_done_90min": {
+      "p_hazard_within_alert_margin": 0.72,
+      "p_breach": 0,
+      "expected_peak_margin_c": -2.8,
+      "worst_plausible_peak_margin_c": -1.7,
+      "median_time_to_limit_min": null,
+      "alert_margin_c": 3
+     },
+     "note": "Hypothesis posteriors are tempered because residuals are autocorrelated. Early in a fault several hypotheses can fit; prefer actions that work under all of them."
+    }
+   }
+  },
+  {
+   "i": 134,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_call",
+   "data": {
+    "name": "estimate_hidden_zones",
+    "args": {}
+   }
+  },
+  {
+   "i": 135,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_result",
+   "data": {
+    "name": "estimate_hidden_zones",
+    "ok": true,
+    "result": {
+     "t_min": 90,
+     "zones": [
+      {
+       "zone": "rackB",
+       "estimate_c": 30.7,
+       "sigma_c": 2,
+       "simulated_limit_c": 35,
+       "margin_to_limit_c": 4.3
+      },
+      {
+       "zone": "desk2",
+       "estimate_c": 22.9,
+       "sigma_c": 0.2,
+       "simulated_limit_c": 32,
+       "margin_to_limit_c": 9.1
+      },
+      {
+       "zone": "conn",
+       "estimate_c": 31.8,
+       "sigma_c": 2.4,
+       "simulated_limit_c": 70,
+       "margin_to_limit_c": 38.2
+      }
+     ],
+     "caveats": [
+      "Regression trained on simulated scenarios; its error is larger for faults that barely disturb the visible sensors (for example a blocked vent on rack B)."
+     ]
+    }
+   }
+  },
+  {
+   "i": 136,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "assistant",
+   "data": {
+    "text": "Diagnosis now points to cooling degradation — testing whether intervention helps.",
+    "model": "muse-spark-1.3",
+    "turn": 5,
+    "tokens": {
+     "prompt_tokens": 6954,
+     "completion_tokens": 587,
+     "reasoning_tokens": 406
+    },
+    "costUsd": 0.01119,
+    "toolCalls": [
+     "simulate_action",
+     "simulate_action"
+    ]
+   }
+  },
+  {
+   "i": 137,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_call",
+   "data": {
+    "name": "simulate_action",
+    "args": {
+     "action": {
+      "kind": "switch_backup_cooling",
+      "zone": "rackA"
+     },
+     "horizon_min": 60
+    }
+   }
+  },
+  {
+   "i": 138,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_result",
+   "data": {
+    "name": "simulate_action",
+    "ok": true,
+    "result": {
+     "action": {
+      "kind": "switch_backup_cooling",
+      "zone": "rackA"
+     },
+     "takes_effect_in_min": 20,
+     "horizon_min": 60,
+     "do_nothing": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -3.3,
+      "worst_plausible_peak_margin_c": -2.4,
+      "median_time_to_limit_min": null
+     },
+     "with_action": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -3.7,
+      "worst_plausible_peak_margin_c": -2.9,
+      "median_time_to_limit_min": null
+     },
+     "per_hypothesis": [
+      {
+       "family": "ac",
+       "weight": 0.251,
+       "peak_margin_c_do_nothing": -3.1,
+       "peak_margin_c_with_action": -3.5,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.208,
+       "peak_margin_c_do_nothing": -3.3,
+       "peak_margin_c_with_action": -3.7,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.203,
+       "peak_margin_c_do_nothing": -3.1,
+       "peak_margin_c_with_action": -3.5,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.182,
+       "peak_margin_c_do_nothing": -3.5,
+       "peak_margin_c_with_action": -3.9,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.103,
+       "peak_margin_c_do_nothing": -4.1,
+       "peak_margin_c_with_action": -4.4,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.054,
+       "peak_margin_c_do_nothing": -2.4,
+       "peak_margin_c_with_action": -2.9,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      }
+     ],
+     "reading_guide": "peak_margin_c = hottest (zone temperature - its limit) over the horizon; negative means within limits."
+    }
+   }
+  },
+  {
+   "i": 139,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_call",
+   "data": {
+    "name": "simulate_action",
+    "args": {
+     "action": {
+      "kind": "shed_noncritical_load"
+     },
+     "horizon_min": 60
+    }
+   }
+  },
+  {
+   "i": 140,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_result",
+   "data": {
+    "name": "simulate_action",
+    "ok": true,
+    "result": {
+     "action": {
+      "kind": "shed_noncritical_load"
+     },
+     "takes_effect_in_min": 16,
+     "horizon_min": 60,
+     "do_nothing": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -3.3,
+      "worst_plausible_peak_margin_c": -2.4,
+      "median_time_to_limit_min": null
+     },
+     "with_action": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -4,
+      "worst_plausible_peak_margin_c": -3.1,
+      "median_time_to_limit_min": null
+     },
+     "per_hypothesis": [
+      {
+       "family": "ac",
+       "weight": 0.251,
+       "peak_margin_c_do_nothing": -3.1,
+       "peak_margin_c_with_action": -3.8,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.208,
+       "peak_margin_c_do_nothing": -3.3,
+       "peak_margin_c_with_action": -4,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.203,
+       "peak_margin_c_do_nothing": -3.1,
+       "peak_margin_c_with_action": -3.8,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.182,
+       "peak_margin_c_do_nothing": -3.5,
+       "peak_margin_c_with_action": -4.2,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.103,
+       "peak_margin_c_do_nothing": -4.1,
+       "peak_margin_c_with_action": -4.8,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.054,
+       "peak_margin_c_do_nothing": -2.4,
+       "peak_margin_c_with_action": -3.1,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      }
+     ],
+     "reading_guide": "peak_margin_c = hottest (zone temperature - its limit) over the horizon; negative means within limits."
+    }
+   }
+  },
+  {
+   "i": 141,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "assistant",
+   "data": {
+    "text": "Both load-reduction options show no breach, but the cooling fault looks credible — testing inspection.",
+    "model": "muse-spark-1.3",
+    "turn": 6,
+    "tokens": {
+     "prompt_tokens": 8046,
+     "completion_tokens": 659,
+     "reasoning_tokens": 554
+    },
+    "costUsd": 0.01286,
+    "toolCalls": [
+     "simulate_action"
+    ]
+   }
+  },
+  {
+   "i": 142,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_call",
+   "data": {
+    "name": "simulate_action",
+    "args": {
+     "action": {
+      "kind": "dispatch_human_check"
+     },
+     "horizon_min": 60
+    }
+   }
+  },
+  {
+   "i": 143,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "tool_result",
+   "data": {
+    "name": "simulate_action",
+    "ok": true,
+    "result": {
+     "action": {
+      "kind": "dispatch_human_check"
+     },
+     "takes_effect_in_min": 60,
+     "horizon_min": 60,
+     "do_nothing": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -3.3,
+      "worst_plausible_peak_margin_c": -2.4,
+      "median_time_to_limit_min": null
+     },
+     "with_action": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -3.3,
+      "worst_plausible_peak_margin_c": -2.4,
+      "median_time_to_limit_min": null
+     },
+     "per_hypothesis": [
+      {
+       "family": "ac",
+       "weight": 0.251,
+       "peak_margin_c_do_nothing": -3.1,
+       "peak_margin_c_with_action": -3.1,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.208,
+       "peak_margin_c_do_nothing": -3.3,
+       "peak_margin_c_with_action": -3.3,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.203,
+       "peak_margin_c_do_nothing": -3.1,
+       "peak_margin_c_with_action": -3.1,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.182,
+       "peak_margin_c_do_nothing": -3.5,
+       "peak_margin_c_with_action": -3.5,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.103,
+       "peak_margin_c_do_nothing": -4.1,
+       "peak_margin_c_with_action": -4.1,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.054,
+       "peak_margin_c_do_nothing": -2.4,
+       "peak_margin_c_with_action": -2.4,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      }
+     ],
+     "reading_guide": "peak_margin_c = hottest (zone temperature - its limit) over the horizon; negative means within limits."
+    }
+   }
+  },
+  {
+   "i": 144,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "assistant",
+   "data": {
+    "text": "No action taken, continued monitoring - but NOT benign.\n\nAll 5 sensors trusted, none flat/stuck.\n\nWhat changed since t=75:\n- S1 27.1C -> 27.85C, S3 23.9C -> 24.29C, both rising ~0.2-0.3C/10min last hour. S2 flat ~22.6C. M1 ~3.5kW steady, prior spike gone. M2 ~75-100mV noisy.\n- Prior load_rackB explanation no longer fits. Diagnose now: AC degradation posterior 1.0, up to 62% lost, onset ~49 min ago, model adequate.\n- Hidden estimate: rackB ~30.7C, margin 4.3C to 35C limit. Desk2 and connector well within limits.\n- 60-90min forecast if nothing done: p_breach 0, expected peak margin -2.8 to -3.3C, worst plausible -1.7 to -2.4C. But p_hazard within 3C alert margin 0.72.\n\nTested in simulation: switch_backup_cooling rackA, shed_noncritical_load, dispatch_human_check. Shed and backup cooling improve margin ~0.4-0.7C but p_breach stays 0 with and without; dispatch has 60min latency so no effect in 60min horizon. With no breach forecast, no intervention meets the threshold for forced action, and allowance +16.3C is uncertainty only, not proof of breach.\n\nCredible unresolved AC fault with rising temperatures, so not declaring benign. No warn/critical sent as breach not yet forecast, no info as no sensor failure. Re-investigate promptly if S1/S3 continue rising or power changes.\n",
+    "model": "muse-spark-1.3",
+    "turn": 7,
+    "tokens": {
+     "prompt_tokens": 8604,
+     "completion_tokens": 1586,
+     "reasoning_tokens": 1199
+    },
+    "costUsd": 0.0175,
+    "toolCalls": []
+   }
+  },
+  {
+   "i": 145,
+   "tMin": 90,
+   "invocation": 3,
+   "kind": "summary",
+   "data": {
+    "text": "No action taken, continued monitoring - but NOT benign.\n\nAll 5 sensors trusted, none flat/stuck.\n\nWhat changed since t=75:\n- S1 27.1C -> 27.85C, S3 23.9C -> 24.29C, both rising ~0.2-0.3C/10min last hour. S2 flat ~22.6C. M1 ~3.5kW steady, prior spike gone. M2 ~75-100mV noisy.\n- Prior load_rackB explanation no longer fits. Diagnose now: AC degradation posterior 1.0, up to 62% lost, onset ~49 min ago, model adequate.\n- Hidden estimate: rackB ~30.7C, margin 4.3C to 35C limit. Desk2 and connector well within limits.\n- 60-90min forecast if nothing done: p_breach 0, expected peak margin -2.8 to -3.3C, worst plausible -1.7 to -2.4C. But p_hazard within 3C alert margin 0.72.\n\nTested in simulation: switch_backup_cooling rackA, shed_noncritical_load, dispatch_human_check. Shed and backup cooling improve margin ~0.4-0.7C but p_breach stays 0 with and without; dispatch has 60min latency so no effect in 60min horizon. With no breach forecast, no intervention meets the threshold for forced action, and allowance +16.3C is uncertainty only, not proof of breach.\n\nCredible unresolved AC fault with rising temperatures, so not declaring benign. No warn/critical sent as breach not yet forecast, no info as no sensor failure. Re-investigate promptly if S1/S3 continue rising or power changes.\n",
+    "outcome": "investigating"
+   }
+  },
+  {
+   "i": 146,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "trigger",
+   "data": {
+    "rule": "residual",
+    "detail": "S1 is 2.8 C above the nominal expectation"
+   }
+  },
+  {
+   "i": 147,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "assistant",
+   "data": {
+    "text": "Trigger re-check — refreshing sensor evidence to see what's changed.",
+    "model": "muse-spark-1.3",
+    "turn": 1,
+    "tokens": {
+     "prompt_tokens": 3241,
+     "completion_tokens": 83,
+     "reasoning_tokens": 25
+    },
+    "costUsd": 0.0044,
+    "toolCalls": [
+     "list_sensors"
+    ]
+   }
+  },
+  {
+   "i": 148,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_call",
+   "data": {
+    "name": "list_sensors",
+    "args": {}
+   }
+  },
+  {
+   "i": 149,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_result",
+   "data": {
+    "name": "list_sensors",
+    "ok": true,
+    "result": {
+     "now_min_since_monitoring_started": 105,
+     "sensors": [
+      {
+       "id": "S1",
+       "label": "Rack A inlet temperature",
+       "location": "Rack A (hot aisle side)",
+       "kind": "temperature",
+       "unit": "°C"
+      },
+      {
+       "id": "S2",
+       "label": "Desk row 1 air temperature",
+       "location": "Desk row 1",
+       "kind": "temperature",
+       "unit": "°C"
+      },
+      {
+       "id": "S3",
+       "label": "Return air temperature",
+       "location": "AC return duct",
+       "kind": "temperature",
+       "unit": "°C"
+      },
+      {
+       "id": "M1",
+       "label": "UPS total power",
+       "location": "UPS output (all loads)",
+       "kind": "power",
+       "unit": "kW"
+      },
+      {
+       "id": "M2",
+       "label": "Rack B power-strip voltage drop",
+       "location": "Rack B feed, strip vs. panel",
+       "kind": "voltage_drop",
+       "unit": "mV"
+      }
+     ],
+     "note": "Everything else in the room is unobserved. Limits are simulated thresholds."
+    }
+   }
+  },
+  {
+   "i": 150,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "assistant",
+   "data": {
+    "text": "",
+    "model": "muse-spark-1.3",
+    "turn": 2,
+    "tokens": {
+     "prompt_tokens": 3501,
+     "completion_tokens": 256,
+     "reasoning_tokens": 13
+    },
+    "costUsd": 0.00546,
+    "toolCalls": [
+     "sensor_metadata",
+     "sensor_metadata",
+     "sensor_metadata",
+     "sensor_metadata",
+     "sensor_metadata"
+    ]
+   }
+  },
+  {
+   "i": 151,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "S1"
+    }
+   }
+  },
+  {
+   "i": 152,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "S1",
+     "label": "Rack A inlet temperature",
+     "location": "Rack A (hot aisle side)",
+     "unit": "°C",
+     "nominal_noise_sigma": 0.3,
+     "last_calibration_days_ago": 374,
+     "std_last_20min": 0.548,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 153,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "S2"
+    }
+   }
+  },
+  {
+   "i": 154,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "S2",
+     "label": "Desk row 1 air temperature",
+     "location": "Desk row 1",
+     "unit": "°C",
+     "nominal_noise_sigma": 0.3,
+     "last_calibration_days_ago": 196,
+     "std_last_20min": 0.3538,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 155,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "S3"
+    }
+   }
+  },
+  {
+   "i": 156,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "S3",
+     "label": "Return air temperature",
+     "location": "AC return duct",
+     "unit": "°C",
+     "nominal_noise_sigma": 0.3,
+     "last_calibration_days_ago": 244,
+     "std_last_20min": 0.5854,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 157,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "M1"
+    }
+   }
+  },
+  {
+   "i": 158,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "M1",
+     "label": "UPS total power",
+     "location": "UPS output (all loads)",
+     "unit": "kW",
+     "nominal_noise_sigma": 0.04,
+     "last_calibration_days_ago": null,
+     "std_last_20min": 0.0509,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 159,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "M2"
+    }
+   }
+  },
+  {
+   "i": 160,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "M2",
+     "label": "Rack B power-strip voltage drop",
+     "location": "Rack B feed, strip vs. panel",
+     "unit": "mV",
+     "nominal_noise_sigma": 15,
+     "last_calibration_days_ago": null,
+     "std_last_20min": 14.9559,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 161,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "assistant",
+   "data": {
+    "text": "All sensors reporting normally — now pulling current readings and trends.",
+    "model": "muse-spark-1.3",
+    "turn": 3,
+    "tokens": {
+     "prompt_tokens": 4150,
+     "completion_tokens": 278,
+     "reasoning_tokens": 5
+    },
+    "costUsd": 0.00637,
+    "toolCalls": [
+     "get_reading",
+     "get_reading",
+     "get_reading",
+     "get_reading",
+     "get_reading"
+    ]
+   }
+  },
+  {
+   "i": 162,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "S1"
+    }
+   }
+  },
+  {
+   "i": 163,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "S1",
+     "t_min": 105,
+     "value": 29.39,
+     "unit": "°C"
+    }
+   }
+  },
+  {
+   "i": 164,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "S2"
+    }
+   }
+  },
+  {
+   "i": 165,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "S2",
+     "t_min": 105,
+     "value": 23.17,
+     "unit": "°C"
+    }
+   }
+  },
+  {
+   "i": 166,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "S3"
+    }
+   }
+  },
+  {
+   "i": 167,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "S3",
+     "t_min": 105,
+     "value": 25.13,
+     "unit": "°C"
+    }
+   }
+  },
+  {
+   "i": 168,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "M1"
+    }
+   }
+  },
+  {
+   "i": 169,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "M1",
+     "t_min": 105,
+     "value": 3.5,
+     "unit": "kW"
+    }
+   }
+  },
+  {
+   "i": 170,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "M2"
+    }
+   }
+  },
+  {
+   "i": 171,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "M2",
+     "t_min": 105,
+     "value": 73.78,
+     "unit": "mV"
+    }
+   }
+  },
+  {
+   "i": 172,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "assistant",
+   "data": {
+    "text": "Sharp rise across temperatures — checking history and diagnosing the fault.",
+    "model": "muse-spark-1.3",
+    "turn": 4,
+    "tokens": {
+     "prompt_tokens": 4640,
+     "completion_tokens": 309,
+     "reasoning_tokens": 82
+    },
+    "costUsd": 0.00711,
+    "toolCalls": [
+     "get_history",
+     "get_history",
+     "estimate_hidden_zones",
+     "diagnose"
+    ]
+   }
+  },
+  {
+   "i": 173,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "S1",
+     "window_min": 90
+    }
+   }
+  },
+  {
+   "i": 174,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "S1",
+     "window_min": 90,
+     "points": [
+      {
+       "t_min_ago": 88,
+       "value": 26.6
+      },
+      {
+       "t_min_ago": 82.5,
+       "value": 26.79
+      },
+      {
+       "t_min_ago": 77,
+       "value": 26.52
+      },
+      {
+       "t_min_ago": 71.5,
+       "value": 26.43
+      },
+      {
+       "t_min_ago": 66,
+       "value": 26.5
+      },
+      {
+       "t_min_ago": 60.5,
+       "value": 26.68
+      },
+      {
+       "t_min_ago": 55,
+       "value": 26.35
+      },
+      {
+       "t_min_ago": 49.5,
+       "value": 26.76
+      },
+      {
+       "t_min_ago": 44,
+       "value": 26.36
+      },
+      {
+       "t_min_ago": 38.5,
+       "value": 26.22
+      },
+      {
+       "t_min_ago": 33,
+       "value": 27.15
+      },
+      {
+       "t_min_ago": 27.5,
+       "value": 27.1
+      },
+      {
+       "t_min_ago": 22,
+       "value": 27.17
+      },
+      {
+       "t_min_ago": 16.5,
+       "value": 27.59
+      },
+      {
+       "t_min_ago": 11,
+       "value": 28.82
+      },
+      {
+       "t_min_ago": 5.5,
+       "value": 28.7
+      },
+      {
+       "t_min_ago": 0,
+       "value": 29.39
+      }
+     ],
+     "min": 25.9,
+     "max": 29.39,
+     "trend_per_10min": 0.244
+    }
+   }
+  },
+  {
+   "i": 175,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "S3",
+     "window_min": 90
+    }
+   }
+  },
+  {
+   "i": 176,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "S3",
+     "window_min": 90,
+     "points": [
+      {
+       "t_min_ago": 88,
+       "value": 22
+      },
+      {
+       "t_min_ago": 82.5,
+       "value": 21.74
+      },
+      {
+       "t_min_ago": 77,
+       "value": 22.49
+      },
+      {
+       "t_min_ago": 71.5,
+       "value": 22.92
+      },
+      {
+       "t_min_ago": 66,
+       "value": 22.53
+      },
+      {
+       "t_min_ago": 60.5,
+       "value": 22.59
+      },
+      {
+       "t_min_ago": 55,
+       "value": 22.46
+      },
+      {
+       "t_min_ago": 49.5,
+       "value": 22.29
+      },
+      {
+       "t_min_ago": 44,
+       "value": 23.07
+      },
+      {
+       "t_min_ago": 38.5,
+       "value": 22.76
+      },
+      {
+       "t_min_ago": 33,
+       "value": 22.85
+      },
+      {
+       "t_min_ago": 27.5,
+       "value": 23.61
+      },
+      {
+       "t_min_ago": 22,
+       "value": 23.77
+      },
+      {
+       "t_min_ago": 16.5,
+       "value": 24.38
+      },
+      {
+       "t_min_ago": 11,
+       "value": 24.06
+      },
+      {
+       "t_min_ago": 5.5,
+       "value": 24.66
+      },
+      {
+       "t_min_ago": 0,
+       "value": 25.13
+      }
+     ],
+     "min": 21.74,
+     "max": 25.43,
+     "trend_per_10min": 0.292
+    }
+   }
+  },
+  {
+   "i": 177,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_call",
+   "data": {
+    "name": "estimate_hidden_zones",
+    "args": {}
+   }
+  },
+  {
+   "i": 178,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_result",
+   "data": {
+    "name": "estimate_hidden_zones",
+    "ok": true,
+    "result": {
+     "t_min": 105,
+     "zones": [
+      {
+       "zone": "rackB",
+       "estimate_c": 30.9,
+       "sigma_c": 2,
+       "simulated_limit_c": 35,
+       "margin_to_limit_c": 4.1
+      },
+      {
+       "zone": "desk2",
+       "estimate_c": 23.4,
+       "sigma_c": 0.2,
+       "simulated_limit_c": 32,
+       "margin_to_limit_c": 8.6
+      },
+      {
+       "zone": "conn",
+       "estimate_c": 31.6,
+       "sigma_c": 2.4,
+       "simulated_limit_c": 70,
+       "margin_to_limit_c": 38.4
+      }
+     ],
+     "caveats": [
+      "Regression trained on simulated scenarios; its error is larger for faults that barely disturb the visible sensors (for example a blocked vent on rack B)."
+     ]
+    }
+   }
+  },
+  {
+   "i": 179,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_call",
+   "data": {
+    "name": "diagnose",
+    "args": {}
+   }
+  },
+  {
+   "i": 180,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_result",
+   "data": {
+    "name": "diagnose",
+    "ok": true,
+    "result": {
+     "t_min": 105,
+     "model_adequate": true,
+     "chi2_per_dof": 2.12,
+     "sensors_excluded_from_fit": [],
+     "observation_coverage": {
+      "untrusted_sensors": [],
+      "unobserved_due_to_sensor_failure": [],
+      "inspection_warranted": false,
+      "note": "Normal readings elsewhere cannot establish that a zone with a failed sensor is safe. A dispatched human check inspects and repairs existing faults in this simulation."
+     },
+     "forecast_uncertainty": {
+      "probabilities_are_calibrated": false,
+      "interpretation": "Probabilities are relative weights within fitted hypotheses, not measured probabilities of safety. Missing fault dynamics can make all hypotheses wrong.",
+      "empirical_upper_allowance_c": 16.32,
+      "worst_plausible_peak_margin_plus_allowance_c": 16.1,
+      "calibration_scenarios": 28,
+      "held_out_scenarios_covered": "12/14",
+      "scope": "Untreated 90-minute forecasts at monitoring minutes 60 and 90; not validated for post-intervention forecasts.",
+      "note": "Empirical one-sided upper residual allowance, using a max-over-checkpoints score per scenario. Calibration seeds are separate from estimator training and the published evaluation. Coverage assumptions may fail under dependent scenarios or distribution shift; this is not a real-world safety guarantee. It does not modify or bypass gate checks."
+     },
+     "p_fault": 1,
+     "hypotheses": [
+      {
+       "family": "ac",
+       "posterior": 1,
+       "description": "AC cooling capacity degrading (up to 73% lost, ramp ~54 min), onset ~62 min ago"
+      },
+      {
+       "family": "none",
+       "posterior": 0,
+       "description": "No fault: readings are explained by the nominal model"
+      },
+      {
+       "family": "vent_rackA",
+       "posterior": 0,
+       "description": "Rack A vent/airflow blocked (up to 82%), onset ~62 min ago"
+      },
+      {
+       "family": "vent_rackB",
+       "posterior": 0,
+       "description": "Rack B vent/airflow blocked (up to 95%), onset ~86 min ago"
+      }
+     ],
+     "if_nothing_is_done_90min": {
+      "p_hazard_within_alert_margin": 1,
+      "p_breach": 0,
+      "expected_peak_margin_c": -0.9,
+      "worst_plausible_peak_margin_c": -0.2,
+      "median_time_to_limit_min": null,
+      "alert_margin_c": 3
+     },
+     "note": "Hypothesis posteriors are tempered because residuals are autocorrelated. Early in a fault several hypotheses can fit; prefer actions that work under all of them."
+    }
+   }
+  },
+  {
+   "i": 181,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "assistant",
+   "data": {
+    "text": "Fault is worsening and margins are tightening — testing mitigation options.",
+    "model": "muse-spark-1.3",
+    "turn": 5,
+    "tokens": {
+     "prompt_tokens": 6129,
+     "completion_tokens": 541,
+     "reasoning_tokens": 284
+    },
+    "costUsd": 0.00996,
+    "toolCalls": [
+     "simulate_action",
+     "simulate_action",
+     "simulate_action"
+    ]
+   }
+  },
+  {
+   "i": 182,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_call",
+   "data": {
+    "name": "simulate_action",
+    "args": {
+     "action": {
+      "kind": "switch_backup_cooling",
+      "zone": "rackA"
+     },
+     "horizon_min": 60
+    }
+   }
+  },
+  {
+   "i": 183,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_result",
+   "data": {
+    "name": "simulate_action",
+    "ok": true,
+    "result": {
+     "action": {
+      "kind": "switch_backup_cooling",
+      "zone": "rackA"
+     },
+     "takes_effect_in_min": 20,
+     "horizon_min": 60,
+     "do_nothing": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -1.6,
+      "worst_plausible_peak_margin_c": -1,
+      "median_time_to_limit_min": null
+     },
+     "with_action": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -2.1,
+      "worst_plausible_peak_margin_c": -1.6,
+      "median_time_to_limit_min": null
+     },
+     "per_hypothesis": [
+      {
+       "family": "ac",
+       "weight": 0.471,
+       "peak_margin_c_do_nothing": -1.4,
+       "peak_margin_c_with_action": -1.9,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.351,
+       "peak_margin_c_do_nothing": -1.8,
+       "peak_margin_c_with_action": -2.3,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.065,
+       "peak_margin_c_do_nothing": -2.7,
+       "peak_margin_c_with_action": -3.1,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.064,
+       "peak_margin_c_do_nothing": -1.4,
+       "peak_margin_c_with_action": -1.9,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.05,
+       "peak_margin_c_do_nothing": -1,
+       "peak_margin_c_with_action": -1.6,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      }
+     ],
+     "reading_guide": "peak_margin_c = hottest (zone temperature - its limit) over the horizon; negative means within limits."
+    }
+   }
+  },
+  {
+   "i": 184,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_call",
+   "data": {
+    "name": "simulate_action",
+    "args": {
+     "action": {
+      "kind": "shed_noncritical_load"
+     },
+     "horizon_min": 60
+    }
+   }
+  },
+  {
+   "i": 185,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_result",
+   "data": {
+    "name": "simulate_action",
+    "ok": true,
+    "result": {
+     "action": {
+      "kind": "shed_noncritical_load"
+     },
+     "takes_effect_in_min": 16,
+     "horizon_min": 60,
+     "do_nothing": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -1.6,
+      "worst_plausible_peak_margin_c": -1,
+      "median_time_to_limit_min": null
+     },
+     "with_action": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -2.4,
+      "worst_plausible_peak_margin_c": -1.8,
+      "median_time_to_limit_min": null
+     },
+     "per_hypothesis": [
+      {
+       "family": "ac",
+       "weight": 0.471,
+       "peak_margin_c_do_nothing": -1.4,
+       "peak_margin_c_with_action": -2.2,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.351,
+       "peak_margin_c_do_nothing": -1.8,
+       "peak_margin_c_with_action": -2.5,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.065,
+       "peak_margin_c_do_nothing": -2.7,
+       "peak_margin_c_with_action": -3.4,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.064,
+       "peak_margin_c_do_nothing": -1.4,
+       "peak_margin_c_with_action": -2.1,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.05,
+       "peak_margin_c_do_nothing": -1,
+       "peak_margin_c_with_action": -1.8,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      }
+     ],
+     "reading_guide": "peak_margin_c = hottest (zone temperature - its limit) over the horizon; negative means within limits."
+    }
+   }
+  },
+  {
+   "i": 186,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_call",
+   "data": {
+    "name": "simulate_action",
+    "args": {
+     "action": {
+      "kind": "dispatch_human_check"
+     },
+     "horizon_min": 60
+    }
+   }
+  },
+  {
+   "i": 187,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_result",
+   "data": {
+    "name": "simulate_action",
+    "ok": true,
+    "result": {
+     "action": {
+      "kind": "dispatch_human_check"
+     },
+     "takes_effect_in_min": 60,
+     "horizon_min": 60,
+     "do_nothing": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -1.6,
+      "worst_plausible_peak_margin_c": -1,
+      "median_time_to_limit_min": null
+     },
+     "with_action": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -1.6,
+      "worst_plausible_peak_margin_c": -1,
+      "median_time_to_limit_min": null
+     },
+     "per_hypothesis": [
+      {
+       "family": "ac",
+       "weight": 0.471,
+       "peak_margin_c_do_nothing": -1.4,
+       "peak_margin_c_with_action": -1.4,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.351,
+       "peak_margin_c_do_nothing": -1.8,
+       "peak_margin_c_with_action": -1.8,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.065,
+       "peak_margin_c_do_nothing": -2.7,
+       "peak_margin_c_with_action": -2.7,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.064,
+       "peak_margin_c_do_nothing": -1.4,
+       "peak_margin_c_with_action": -1.4,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.05,
+       "peak_margin_c_do_nothing": -1,
+       "peak_margin_c_with_action": -1,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      }
+     ],
+     "reading_guide": "peak_margin_c = hottest (zone temperature - its limit) over the horizon; negative means within limits."
+    }
+   }
+  },
+  {
+   "i": 188,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "assistant",
+   "data": {
+    "text": "Near-limit heat with a confirmed cooling fault — requesting mild load relief and alerting the operator.",
+    "model": "muse-spark-1.3",
+    "turn": 6,
+    "tokens": {
+     "prompt_tokens": 7591,
+     "completion_tokens": 1640,
+     "reasoning_tokens": 1473
+    },
+    "costUsd": 0.01646,
+    "toolCalls": [
+     "request_action"
+    ]
+   }
+  },
+  {
+   "i": 189,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_call",
+   "data": {
+    "name": "request_action",
+    "args": {
+     "action": {
+      "kind": "shed_noncritical_load"
+     },
+     "reason": "AC degradation posterior 1.0 with rapid rise S1 27.85 to 29.39C in 15min, 90min worst margin -0.2C and p_hazard 1.0. Shed improves margin under every AC hypothesis by ~0.8C in simulation, least-drastic effective mitigation."
+    }
+   }
+  },
+  {
+   "i": 190,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_result",
+   "data": {
+    "name": "request_action",
+    "ok": false,
+    "result": {
+     "status": "refused",
+     "reasons": [
+      "under hypothesis 'ac' (weight 0.47) the action improves peak by only 0.9 C (needs >= 1 C under every plausible hypothesis) [NOT_ROBUST]"
+     ],
+     "message": "Refused by the safety gate. Nothing was applied. Revise using the reasons.",
+     "refusals_so_far": 1
+    }
+   }
+  },
+  {
+   "i": 191,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "gate",
+   "data": {
+    "allowed": false,
+    "checks": [
+     {
+      "name": "in_catalog",
+      "pass": true,
+      "detail": "action is in the catalog and its arguments validate"
+     },
+     {
+      "name": "horizon_bound",
+      "pass": true,
+      "detail": "prediction horizon 90 min is within 120 min"
+     },
+     {
+      "name": "simulated_first",
+      "pass": true,
+      "detail": "tested 3 distinct actions in simulation"
+     },
+     {
+      "name": "not_repeat_refusal",
+      "pass": true,
+      "detail": "this action has not been refused before"
+     },
+     {
+      "name": "model_adequate",
+      "pass": true,
+      "detail": "the twin explains the observed data"
+     },
+     {
+      "name": "hazard_plausible",
+      "pass": true,
+      "detail": "P(hazard within horizon)=1.00 >= 0.15"
+     },
+     {
+      "name": "robust_improvement",
+      "pass": false,
+      "detail": "under hypothesis 'ac' (weight 0.47) the action improves peak by only 0.9 C (needs >= 1 C under every plausible hypothesis) [NOT_ROBUST]"
+     },
+     {
+      "name": "no_new_hazard",
+      "pass": true,
+      "detail": "the action does not create a new predicted limit breach"
+     }
+    ],
+    "reasons": [
+     "under hypothesis 'ac' (weight 0.47) the action improves peak by only 0.9 C (needs >= 1 C under every plausible hypothesis) [NOT_ROBUST]"
+    ],
+    "expectedImprovementC": 0.94,
+    "worstCaseImprovementC": 0.9
+   }
+  },
+  {
+   "i": 192,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "assistant",
+   "data": {
+    "text": "That load shed wasn't strong enough to pass the safety check — testing stronger caps.",
+    "model": "muse-spark-1.3",
+    "turn": 7,
+    "tokens": {
+     "prompt_tokens": 7852,
+     "completion_tokens": 312,
+     "reasoning_tokens": 107
+    },
+    "costUsd": 0.01114,
+    "toolCalls": [
+     "simulate_action",
+     "simulate_action"
+    ]
+   }
+  },
+  {
+   "i": 193,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_call",
+   "data": {
+    "name": "simulate_action",
+    "args": {
+     "action": {
+      "kind": "power_cap_rack",
+      "rack": "rackB",
+      "fraction": 0.6
+     },
+     "horizon_min": 60
+    }
+   }
+  },
+  {
+   "i": 194,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_result",
+   "data": {
+    "name": "simulate_action",
+    "ok": true,
+    "result": {
+     "action": {
+      "kind": "power_cap_rack",
+      "rack": "rackB",
+      "fraction": 0.6
+     },
+     "takes_effect_in_min": 16,
+     "horizon_min": 60,
+     "do_nothing": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -1.6,
+      "worst_plausible_peak_margin_c": -1,
+      "median_time_to_limit_min": null
+     },
+     "with_action": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -3.2,
+      "worst_plausible_peak_margin_c": -2.7,
+      "median_time_to_limit_min": null
+     },
+     "per_hypothesis": [
+      {
+       "family": "ac",
+       "weight": 0.471,
+       "peak_margin_c_do_nothing": -1.4,
+       "peak_margin_c_with_action": -3.1,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.351,
+       "peak_margin_c_do_nothing": -1.8,
+       "peak_margin_c_with_action": -3.5,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.065,
+       "peak_margin_c_do_nothing": -2.7,
+       "peak_margin_c_with_action": -3.9,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.064,
+       "peak_margin_c_do_nothing": -1.4,
+       "peak_margin_c_with_action": -3.1,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.05,
+       "peak_margin_c_do_nothing": -1,
+       "peak_margin_c_with_action": -2.7,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      }
+     ],
+     "reading_guide": "peak_margin_c = hottest (zone temperature - its limit) over the horizon; negative means within limits."
+    }
+   }
+  },
+  {
+   "i": 195,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_call",
+   "data": {
+    "name": "simulate_action",
+    "args": {
+     "action": {
+      "kind": "power_cap_rack",
+      "rack": "rackA",
+      "fraction": 0.6
+     },
+     "horizon_min": 60
+    }
+   }
+  },
+  {
+   "i": 196,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_result",
+   "data": {
+    "name": "simulate_action",
+    "ok": true,
+    "result": {
+     "action": {
+      "kind": "power_cap_rack",
+      "rack": "rackA",
+      "fraction": 0.6
+     },
+     "takes_effect_in_min": 16,
+     "horizon_min": 60,
+     "do_nothing": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -1.6,
+      "worst_plausible_peak_margin_c": -1,
+      "median_time_to_limit_min": null
+     },
+     "with_action": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -2,
+      "worst_plausible_peak_margin_c": -1.4,
+      "median_time_to_limit_min": null
+     },
+     "per_hypothesis": [
+      {
+       "family": "ac",
+       "weight": 0.471,
+       "peak_margin_c_do_nothing": -1.4,
+       "peak_margin_c_with_action": -1.9,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.351,
+       "peak_margin_c_do_nothing": -1.8,
+       "peak_margin_c_with_action": -2.2,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.065,
+       "peak_margin_c_do_nothing": -2.7,
+       "peak_margin_c_with_action": -3.1,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.064,
+       "peak_margin_c_do_nothing": -1.4,
+       "peak_margin_c_with_action": -1.8,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.05,
+       "peak_margin_c_do_nothing": -1,
+       "peak_margin_c_with_action": -1.4,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      }
+     ],
+     "reading_guide": "peak_margin_c = hottest (zone temperature - its limit) over the horizon; negative means within limits."
+    }
+   }
+  },
+  {
+   "i": 197,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "assistant",
+   "data": {
+    "text": "A rack power cap shows strong protection in simulation — requesting approval and notifying.",
+    "model": "muse-spark-1.3",
+    "turn": 8,
+    "tokens": {
+     "prompt_tokens": 8878,
+     "completion_tokens": 346,
+     "reasoning_tokens": 172
+    },
+    "costUsd": 0.01257,
+    "toolCalls": [
+     "request_action"
+    ]
+   }
+  },
+  {
+   "i": 198,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_call",
+   "data": {
+    "name": "request_action",
+    "args": {
+     "action": {
+      "kind": "power_cap_rack",
+      "fraction": 0.6,
+      "rack": "rackB"
+     },
+     "reason": "AC fault posterior 1.0, S1 up 1.5C in 15min to 29.4C, 90min worst margin -0.2C. Cap rackB 0.6 improves margin 1.2-1.7C under every hypothesis in 60min sim."
+    }
+   }
+  },
+  {
+   "i": 199,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_result",
+   "data": {
+    "name": "request_action",
+    "ok": true,
+    "result": {
+     "status": "needs_input",
+     "message": "Passed the safety gate. Waiting for human approval before anything is applied.",
+     "expected_improvement_c": 1.97,
+     "worst_plausible_improvement_c": 1.58
+    }
+   }
+  },
+  {
+   "i": 200,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "gate",
+   "data": {
+    "allowed": true,
+    "checks": [
+     {
+      "name": "in_catalog",
+      "pass": true,
+      "detail": "action is in the catalog and its arguments validate"
+     },
+     {
+      "name": "horizon_bound",
+      "pass": true,
+      "detail": "prediction horizon 90 min is within 120 min"
+     },
+     {
+      "name": "simulated_first",
+      "pass": true,
+      "detail": "tested 5 distinct actions in simulation"
+     },
+     {
+      "name": "not_repeat_refusal",
+      "pass": true,
+      "detail": "this action has not been refused before"
+     },
+     {
+      "name": "critical_load_floor",
+      "pass": true,
+      "detail": "rack B (critical load) cap of 0.6 is not below 0.6"
+     },
+     {
+      "name": "model_adequate",
+      "pass": true,
+      "detail": "the twin explains the observed data"
+     },
+     {
+      "name": "hazard_plausible",
+      "pass": true,
+      "detail": "P(hazard within horizon)=1.00 >= 0.15"
+     },
+     {
+      "name": "robust_improvement",
+      "pass": true,
+      "detail": "improves the predicted peak by >= 1 C under every plausible hypothesis"
+     },
+     {
+      "name": "no_new_hazard",
+      "pass": true,
+      "detail": "the action does not create a new predicted limit breach"
+     }
+    ],
+    "reasons": [],
+    "expectedImprovementC": 1.97,
+    "worstCaseImprovementC": 1.58
+   }
+  },
+  {
+   "i": 201,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "approval",
+   "data": {
+    "decision": "approved",
+    "mode": "auto-simulated",
+    "by": "simulated operator (auto-approved in this recording)"
+   }
+  },
+  {
+   "i": 202,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "applied",
+   "data": {
+    "action": {
+     "kind": "power_cap_rack",
+     "rack": "rackB",
+     "fraction": 0.6
+    },
+    "tApplyMin": 121
+   }
+  },
+  {
+   "i": 203,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "assistant",
+   "data": {
+    "text": "",
+    "model": "muse-spark-1.3",
+    "turn": 9,
+    "tokens": {
+     "prompt_tokens": 9097,
+     "completion_tokens": 397,
+     "reasoning_tokens": 275
+    },
+    "costUsd": 0.01306,
+    "toolCalls": [
+     "notify"
+    ]
+   }
+  },
+  {
+   "i": 204,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_call",
+   "data": {
+    "name": "notify",
+    "args": {
+     "level": "warn",
+     "message": "AC cooling fault likely (posterior 1.0), S1 29.4C rising fast, hidden rackB ~30.9C. 90-min worst margin only 0.2C to limit. RackB power cap to 60% approved, takes effect in 16 min."
+    }
+   }
+  },
+  {
+   "i": 205,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "tool_result",
+   "data": {
+    "name": "notify",
+    "ok": true,
+    "result": {
+     "delivered": true,
+     "level": "warn",
+     "t_min": 105
+    }
+   }
+  },
+  {
+   "i": 206,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "assistant",
+   "data": {
+    "text": "Worsening AC cooling fault (posterior 1.0, up to 73% lost).\n\nFound: S1 27.85→29.39C and S3 24.29→25.13C in 15 min (+0.24-0.29C/10min). All sensors trusted. Hidden rackB ~30.9C, margin 4.1C to 35C limit but 90-min forecast worst margin -0.2C, p_hazard within 3C =1.0, p_breach 0.\n\nDone: tested 3+ actions. shed and backup-cooling helped <1C and shed refused by gate as not robust. RackB power-cap 0.6 improves 1.2-1.7C under every hypothesis. Requested and human APPROVED power_cap rackB 0.6; takes effect in 16 min. Warn sent.\n\nNext: human verify cap applied, inspect/repair AC urgently, re-check S1/S3 trend – if rise continues or breach forecast, escalate further.",
+    "model": "muse-spark-1.3",
+    "turn": 10,
+    "tokens": {
+     "prompt_tokens": 7069,
+     "completion_tokens": 236,
+     "reasoning_tokens": 3
+    },
+    "costUsd": 0.00984,
+    "toolCalls": []
+   }
+  },
+  {
+   "i": 207,
+   "tMin": 105,
+   "invocation": 4,
+   "kind": "summary",
+   "data": {
+    "text": "Worsening AC cooling fault (posterior 1.0, up to 73% lost).\n\nFound: S1 27.85→29.39C and S3 24.29→25.13C in 15 min (+0.24-0.29C/10min). All sensors trusted. Hidden rackB ~30.9C, margin 4.1C to 35C limit but 90-min forecast worst margin -0.2C, p_hazard within 3C =1.0, p_breach 0.\n\nDone: tested 3+ actions. shed and backup-cooling helped <1C and shed refused by gate as not robust. RackB power-cap 0.6 improves 1.2-1.7C under every hypothesis. Requested and human APPROVED power_cap rackB 0.6; takes effect in 16 min. Warn sent.\n\nNext: human verify cap applied, inspect/repair AC urgently, re-check S1/S3 trend – if rise continues or breach forecast, escalate further.",
+    "outcome": "applied"
+   }
+  },
+  {
+   "i": 208,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "trigger",
+   "data": {
+    "rule": "residual",
+    "detail": "S1 is 5.9 C above the nominal expectation"
+   }
+  },
+  {
+   "i": 209,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "assistant",
+   "data": {
+    "text": "Re-checking the room after that cooling cap — pulling fresh readings.",
+    "model": "muse-spark-1.3",
+    "turn": 1,
+    "tokens": {
+     "prompt_tokens": 3143,
+     "completion_tokens": 77,
+     "reasoning_tokens": 17
+    },
+    "costUsd": 0.00426,
+    "toolCalls": [
+     "list_sensors"
+    ]
+   }
+  },
+  {
+   "i": 210,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_call",
+   "data": {
+    "name": "list_sensors",
+    "args": {}
+   }
+  },
+  {
+   "i": 211,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_result",
+   "data": {
+    "name": "list_sensors",
+    "ok": true,
+    "result": {
+     "now_min_since_monitoring_started": 136,
+     "sensors": [
+      {
+       "id": "S1",
+       "label": "Rack A inlet temperature",
+       "location": "Rack A (hot aisle side)",
+       "kind": "temperature",
+       "unit": "°C"
+      },
+      {
+       "id": "S2",
+       "label": "Desk row 1 air temperature",
+       "location": "Desk row 1",
+       "kind": "temperature",
+       "unit": "°C"
+      },
+      {
+       "id": "S3",
+       "label": "Return air temperature",
+       "location": "AC return duct",
+       "kind": "temperature",
+       "unit": "°C"
+      },
+      {
+       "id": "M1",
+       "label": "UPS total power",
+       "location": "UPS output (all loads)",
+       "kind": "power",
+       "unit": "kW"
+      },
+      {
+       "id": "M2",
+       "label": "Rack B power-strip voltage drop",
+       "location": "Rack B feed, strip vs. panel",
+       "kind": "voltage_drop",
+       "unit": "mV"
+      }
+     ],
+     "note": "Everything else in the room is unobserved. Limits are simulated thresholds."
+    }
+   }
+  },
+  {
+   "i": 212,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "assistant",
+   "data": {
+    "text": "Investigating the trigger — verifying sensors and trends.",
+    "model": "muse-spark-1.3",
+    "turn": 2,
+    "tokens": {
+     "prompt_tokens": 3405,
+     "completion_tokens": 274,
+     "reasoning_tokens": 13
+    },
+    "costUsd": 0.00542,
+    "toolCalls": [
+     "sensor_metadata",
+     "sensor_metadata",
+     "sensor_metadata",
+     "sensor_metadata",
+     "sensor_metadata"
+    ]
+   }
+  },
+  {
+   "i": 213,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "S1"
+    }
+   }
+  },
+  {
+   "i": 214,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "S1",
+     "label": "Rack A inlet temperature",
+     "location": "Rack A (hot aisle side)",
+     "unit": "°C",
+     "nominal_noise_sigma": 0.3,
+     "last_calibration_days_ago": 374,
+     "std_last_20min": 0.6852,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 215,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "S2"
+    }
+   }
+  },
+  {
+   "i": 216,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "S2",
+     "label": "Desk row 1 air temperature",
+     "location": "Desk row 1",
+     "unit": "°C",
+     "nominal_noise_sigma": 0.3,
+     "last_calibration_days_ago": 196,
+     "std_last_20min": 0.4932,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 217,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "S3"
+    }
+   }
+  },
+  {
+   "i": 218,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "S3",
+     "label": "Return air temperature",
+     "location": "AC return duct",
+     "unit": "°C",
+     "nominal_noise_sigma": 0.3,
+     "last_calibration_days_ago": 244,
+     "std_last_20min": 0.4944,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 219,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "M1"
+    }
+   }
+  },
+  {
+   "i": 220,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "M1",
+     "label": "UPS total power",
+     "location": "UPS output (all loads)",
+     "unit": "kW",
+     "nominal_noise_sigma": 0.04,
+     "last_calibration_days_ago": null,
+     "std_last_20min": 0.325,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 221,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "M2"
+    }
+   }
+  },
+  {
+   "i": 222,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "M2",
+     "label": "Rack B power-strip voltage drop",
+     "location": "Rack B feed, strip vs. panel",
+     "unit": "mV",
+     "nominal_noise_sigma": 15,
+     "last_calibration_days_ago": null,
+     "std_last_20min": 19.7853,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 223,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "assistant",
+   "data": {
+    "text": "Sensors look healthy, so I'm gathering current values and history.",
+    "model": "muse-spark-1.3",
+    "turn": 3,
+    "tokens": {
+     "prompt_tokens": 4072,
+     "completion_tokens": 285,
+     "reasoning_tokens": 12
+    },
+    "costUsd": 0.0063,
+    "toolCalls": [
+     "get_reading",
+     "get_reading",
+     "get_reading",
+     "get_reading",
+     "get_reading"
+    ]
+   }
+  },
+  {
+   "i": 224,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "S1"
+    }
+   }
+  },
+  {
+   "i": 225,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "S1",
+     "t_min": 136,
+     "value": 31.88,
+     "unit": "°C"
+    }
+   }
+  },
+  {
+   "i": 226,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "S2"
+    }
+   }
+  },
+  {
+   "i": 227,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "S2",
+     "t_min": 136,
+     "value": 24.9,
+     "unit": "°C"
+    }
+   }
+  },
+  {
+   "i": 228,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "S3"
+    }
+   }
+  },
+  {
+   "i": 229,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "S3",
+     "t_min": 136,
+     "value": 28.11,
+     "unit": "°C"
+    }
+   }
+  },
+  {
+   "i": 230,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "M1"
+    }
+   }
+  },
+  {
+   "i": 231,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "M1",
+     "t_min": 136,
+     "value": 2.71,
+     "unit": "kW"
+    }
+   }
+  },
+  {
+   "i": 232,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "M2"
+    }
+   }
+  },
+  {
+   "i": 233,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "M2",
+     "t_min": 136,
+     "value": 70.78,
+     "unit": "mV"
+    }
+   }
+  },
+  {
+   "i": 234,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "assistant",
+   "data": {
+    "text": "Temperatures jumped despite the power cap — checking history and diagnosing.",
+    "model": "muse-spark-1.3",
+    "turn": 4,
+    "tokens": {
+     "prompt_tokens": 4562,
+     "completion_tokens": 330,
+     "reasoning_tokens": 43
+    },
+    "costUsd": 0.00711,
+    "toolCalls": [
+     "get_history",
+     "get_history",
+     "get_history",
+     "estimate_hidden_zones",
+     "diagnose"
+    ]
+   }
+  },
+  {
+   "i": 235,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "S1",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 236,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "S1",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 60,
+       "value": 27.5
+      },
+      {
+       "t_min_ago": 56,
+       "value": 27.35
+      },
+      {
+       "t_min_ago": 52,
+       "value": 27.71
+      },
+      {
+       "t_min_ago": 48,
+       "value": 27.96
+      },
+      {
+       "t_min_ago": 44,
+       "value": 27.99
+      },
+      {
+       "t_min_ago": 40,
+       "value": 28.39
+      },
+      {
+       "t_min_ago": 36,
+       "value": 28.88
+      },
+      {
+       "t_min_ago": 32,
+       "value": 29.32
+      },
+      {
+       "t_min_ago": 28,
+       "value": 29.74
+      },
+      {
+       "t_min_ago": 24,
+       "value": 29.29
+      },
+      {
+       "t_min_ago": 20,
+       "value": 30.39
+      },
+      {
+       "t_min_ago": 16,
+       "value": 30.79
+      },
+      {
+       "t_min_ago": 12,
+       "value": 31.29
+      },
+      {
+       "t_min_ago": 8,
+       "value": 31.79
+      },
+      {
+       "t_min_ago": 4,
+       "value": 31.28
+      },
+      {
+       "t_min_ago": 0,
+       "value": 31.88
+      }
+     ],
+     "min": 26.73,
+     "max": 33.01,
+     "trend_per_10min": 0.912
+    }
+   }
+  },
+  {
+   "i": 237,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "S3",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 238,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "S3",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 60,
+       "value": 23.32
+      },
+      {
+       "t_min_ago": 56,
+       "value": 23.49
+      },
+      {
+       "t_min_ago": 52,
+       "value": 24.03
+      },
+      {
+       "t_min_ago": 48,
+       "value": 23.2
+      },
+      {
+       "t_min_ago": 44,
+       "value": 24.05
+      },
+      {
+       "t_min_ago": 40,
+       "value": 23.69
+      },
+      {
+       "t_min_ago": 36,
+       "value": 25.21
+      },
+      {
+       "t_min_ago": 32,
+       "value": 25.3
+      },
+      {
+       "t_min_ago": 28,
+       "value": 25.62
+      },
+      {
+       "t_min_ago": 24,
+       "value": 26.2
+      },
+      {
+       "t_min_ago": 20,
+       "value": 25.78
+      },
+      {
+       "t_min_ago": 16,
+       "value": 27.05
+      },
+      {
+       "t_min_ago": 12,
+       "value": 27.87
+      },
+      {
+       "t_min_ago": 8,
+       "value": 27.51
+      },
+      {
+       "t_min_ago": 4,
+       "value": 28.08
+      },
+      {
+       "t_min_ago": 0,
+       "value": 28.11
+      }
+     ],
+     "min": 23.12,
+     "max": 28.5,
+     "trend_per_10min": 0.929
+    }
+   }
+  },
+  {
+   "i": 239,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "M1",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 240,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "M1",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 60,
+       "value": 3.51
+      },
+      {
+       "t_min_ago": 56,
+       "value": 3.57
+      },
+      {
+       "t_min_ago": 52,
+       "value": 3.61
+      },
+      {
+       "t_min_ago": 48,
+       "value": 3.57
+      },
+      {
+       "t_min_ago": 44,
+       "value": 3.56
+      },
+      {
+       "t_min_ago": 40,
+       "value": 3.55
+      },
+      {
+       "t_min_ago": 36,
+       "value": 3.54
+      },
+      {
+       "t_min_ago": 32,
+       "value": 3.51
+      },
+      {
+       "t_min_ago": 28,
+       "value": 3.58
+      },
+      {
+       "t_min_ago": 24,
+       "value": 3.52
+      },
+      {
+       "t_min_ago": 20,
+       "value": 3.57
+      },
+      {
+       "t_min_ago": 16,
+       "value": 3.52
+      },
+      {
+       "t_min_ago": 12,
+       "value": 2.83
+      },
+      {
+       "t_min_ago": 8,
+       "value": 2.83
+      },
+      {
+       "t_min_ago": 4,
+       "value": 2.75
+      },
+      {
+       "t_min_ago": 0,
+       "value": 2.71
+      }
+     ],
+     "min": 2.7,
+     "max": 3.68,
+     "trend_per_10min": -0.133
+    }
+   }
+  },
+  {
+   "i": 241,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_call",
+   "data": {
+    "name": "estimate_hidden_zones",
+    "args": {}
+   }
+  },
+  {
+   "i": 242,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_result",
+   "data": {
+    "name": "estimate_hidden_zones",
+    "ok": true,
+    "result": {
+     "t_min": 136,
+     "zones": [
+      {
+       "zone": "rackB",
+       "estimate_c": 32.9,
+       "sigma_c": 2,
+       "simulated_limit_c": 35,
+       "margin_to_limit_c": 2.1
+      },
+      {
+       "zone": "desk2",
+       "estimate_c": 25.4,
+       "sigma_c": 0.2,
+       "simulated_limit_c": 32,
+       "margin_to_limit_c": 6.6
+      },
+      {
+       "zone": "conn",
+       "estimate_c": 32.4,
+       "sigma_c": 2.4,
+       "simulated_limit_c": 70,
+       "margin_to_limit_c": 37.6
+      }
+     ],
+     "caveats": [
+      "Regression trained on simulated scenarios; its error is larger for faults that barely disturb the visible sensors (for example a blocked vent on rack B)."
+     ]
+    }
+   }
+  },
+  {
+   "i": 243,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_call",
+   "data": {
+    "name": "diagnose",
+    "args": {}
+   }
+  },
+  {
+   "i": 244,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_result",
+   "data": {
+    "name": "diagnose",
+    "ok": true,
+    "result": {
+     "t_min": 136,
+     "model_adequate": true,
+     "chi2_per_dof": 1.87,
+     "sensors_excluded_from_fit": [],
+     "observation_coverage": {
+      "untrusted_sensors": [],
+      "unobserved_due_to_sensor_failure": [],
+      "inspection_warranted": false,
+      "note": "Normal readings elsewhere cannot establish that a zone with a failed sensor is safe. A dispatched human check inspects and repairs existing faults in this simulation."
+     },
+     "forecast_uncertainty": {
+      "probabilities_are_calibrated": false,
+      "interpretation": "Probabilities are relative weights within fitted hypotheses, not measured probabilities of safety. Missing fault dynamics can make all hypotheses wrong."
+     },
+     "p_fault": 1,
+     "hypotheses": [
+      {
+       "family": "ac",
+       "posterior": 1,
+       "description": "AC cooling capacity degrading (up to 93% lost, ramp ~73 min), onset ~95 min ago"
+      },
+      {
+       "family": "none",
+       "posterior": 0,
+       "description": "No fault: readings are explained by the nominal model"
+      },
+      {
+       "family": "vent_rackA",
+       "posterior": 0,
+       "description": "Rack A vent/airflow blocked (up to 75%), onset ~89 min ago"
+      },
+      {
+       "family": "vent_rackB",
+       "posterior": 0,
+       "description": "Rack B vent/airflow blocked (up to 95%), onset ~121 min ago"
+      }
+     ],
+     "if_nothing_is_done_90min": {
+      "p_hazard_within_alert_margin": 1,
+      "p_breach": 1,
+      "expected_peak_margin_c": 2.4,
+      "worst_plausible_peak_margin_c": 2.7,
+      "median_time_to_limit_min": 34,
+      "alert_margin_c": 3
+     },
+     "note": "Hypothesis posteriors are tempered because residuals are autocorrelated. Early in a fault several hypotheses can fit; prefer actions that work under all of them."
+    }
+   }
+  },
+  {
+   "i": 245,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "assistant",
+   "data": {
+    "text": "AC fault is worsening and breach is forecast despite the cap — testing next actions.",
+    "model": "muse-spark-1.3",
+    "turn": 5,
+    "tokens": {
+     "prompt_tokens": 6192,
+     "completion_tokens": 471,
+     "reasoning_tokens": 210
+    },
+    "costUsd": 0.00974,
+    "toolCalls": [
+     "simulate_action",
+     "simulate_action",
+     "simulate_action"
+    ]
+   }
+  },
+  {
+   "i": 246,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_call",
+   "data": {
+    "name": "simulate_action",
+    "args": {
+     "action": {
+      "kind": "switch_backup_cooling",
+      "zone": "rackA"
+     },
+     "horizon_min": 60
+    }
+   }
+  },
+  {
+   "i": 247,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_result",
+   "data": {
+    "name": "simulate_action",
+    "ok": true,
+    "result": {
+     "action": {
+      "kind": "switch_backup_cooling",
+      "zone": "rackA"
+     },
+     "takes_effect_in_min": 20,
+     "horizon_min": 60,
+     "do_nothing": {
+      "p_breach": 1,
+      "expected_peak_margin_c": 1.2,
+      "worst_plausible_peak_margin_c": 1.4,
+      "median_time_to_limit_min": 34
+     },
+     "with_action": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -0.9,
+      "worst_plausible_peak_margin_c": -0.7,
+      "median_time_to_limit_min": null
+     },
+     "per_hypothesis": [
+      {
+       "family": "ac",
+       "weight": 0.527,
+       "peak_margin_c_do_nothing": 1.3,
+       "peak_margin_c_with_action": -0.8,
+       "time_to_limit_min_do_nothing": 34,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.265,
+       "peak_margin_c_do_nothing": 0.6,
+       "peak_margin_c_with_action": -1.2,
+       "time_to_limit_min_do_nothing": 45,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.208,
+       "peak_margin_c_do_nothing": 1.4,
+       "peak_margin_c_with_action": -0.7,
+       "time_to_limit_min_do_nothing": 32,
+       "time_to_limit_min_with_action": null
+      }
+     ],
+     "reading_guide": "peak_margin_c = hottest (zone temperature - its limit) over the horizon; negative means within limits."
+    }
+   }
+  },
+  {
+   "i": 248,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_call",
+   "data": {
+    "name": "simulate_action",
+    "args": {
+     "action": {
+      "kind": "shed_noncritical_load"
+     },
+     "horizon_min": 60
+    }
+   }
+  },
+  {
+   "i": 249,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_result",
+   "data": {
+    "name": "simulate_action",
+    "ok": true,
+    "result": {
+     "action": {
+      "kind": "shed_noncritical_load"
+     },
+     "takes_effect_in_min": 16,
+     "horizon_min": 60,
+     "do_nothing": {
+      "p_breach": 1,
+      "expected_peak_margin_c": 1.2,
+      "worst_plausible_peak_margin_c": 1.4,
+      "median_time_to_limit_min": 34
+     },
+     "with_action": {
+      "p_breach": 0.74,
+      "expected_peak_margin_c": 0.5,
+      "worst_plausible_peak_margin_c": 0.8,
+      "median_time_to_limit_min": 41.5
+     },
+     "per_hypothesis": [
+      {
+       "family": "ac",
+       "weight": 0.527,
+       "peak_margin_c_do_nothing": 1.3,
+       "peak_margin_c_with_action": 0.7,
+       "time_to_limit_min_do_nothing": 34,
+       "time_to_limit_min_with_action": 41.5
+      },
+      {
+       "family": "ac",
+       "weight": 0.265,
+       "peak_margin_c_do_nothing": 0.6,
+       "peak_margin_c_with_action": 0,
+       "time_to_limit_min_do_nothing": 45,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.208,
+       "peak_margin_c_do_nothing": 1.4,
+       "peak_margin_c_with_action": 0.8,
+       "time_to_limit_min_do_nothing": 32,
+       "time_to_limit_min_with_action": 39
+      }
+     ],
+     "reading_guide": "peak_margin_c = hottest (zone temperature - its limit) over the horizon; negative means within limits."
+    }
+   }
+  },
+  {
+   "i": 250,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_call",
+   "data": {
+    "name": "simulate_action",
+    "args": {
+     "action": {
+      "kind": "dispatch_human_check"
+     },
+     "horizon_min": 60
+    }
+   }
+  },
+  {
+   "i": 251,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_result",
+   "data": {
+    "name": "simulate_action",
+    "ok": true,
+    "result": {
+     "action": {
+      "kind": "dispatch_human_check"
+     },
+     "takes_effect_in_min": 60,
+     "horizon_min": 60,
+     "do_nothing": {
+      "p_breach": 1,
+      "expected_peak_margin_c": 1.2,
+      "worst_plausible_peak_margin_c": 1.4,
+      "median_time_to_limit_min": 34
+     },
+     "with_action": {
+      "p_breach": 1,
+      "expected_peak_margin_c": 1.2,
+      "worst_plausible_peak_margin_c": 1.4,
+      "median_time_to_limit_min": 34
+     },
+     "per_hypothesis": [
+      {
+       "family": "ac",
+       "weight": 0.527,
+       "peak_margin_c_do_nothing": 1.3,
+       "peak_margin_c_with_action": 1.3,
+       "time_to_limit_min_do_nothing": 34,
+       "time_to_limit_min_with_action": 34
+      },
+      {
+       "family": "ac",
+       "weight": 0.265,
+       "peak_margin_c_do_nothing": 0.6,
+       "peak_margin_c_with_action": 0.6,
+       "time_to_limit_min_do_nothing": 45,
+       "time_to_limit_min_with_action": 45
+      },
+      {
+       "family": "ac",
+       "weight": 0.208,
+       "peak_margin_c_do_nothing": 1.4,
+       "peak_margin_c_with_action": 1.4,
+       "time_to_limit_min_do_nothing": 32,
+       "time_to_limit_min_with_action": 32
+      }
+     ],
+     "reading_guide": "peak_margin_c = hottest (zone temperature - its limit) over the horizon; negative means within limits."
+    }
+   }
+  },
+  {
+   "i": 252,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "assistant",
+   "data": {
+    "text": "",
+    "model": "muse-spark-1.3",
+    "turn": 6,
+    "tokens": {
+     "prompt_tokens": 7378,
+     "completion_tokens": 320,
+     "reasoning_tokens": 191
+    },
+    "costUsd": 0.01058,
+    "toolCalls": [
+     "request_action"
+    ]
+   }
+  },
+  {
+   "i": 253,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_call",
+   "data": {
+    "name": "request_action",
+    "args": {
+     "action": {
+      "kind": "switch_backup_cooling",
+      "zone": "rackA"
+     },
+     "reason": "AC fault posterior 1.0 worsening (93% lost), breach p=1 in ~34min despite rackB cap. Backup cooling tested: peak margin +1.2 to -0.9, p_breach 0 under all hypotheses."
+    }
+   }
+  },
+  {
+   "i": 254,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "tool_result",
+   "data": {
+    "name": "request_action",
+    "ok": true,
+    "result": {
+     "status": "needs_input",
+     "message": "Passed the safety gate. Waiting for human approval before anything is applied.",
+     "expected_improvement_c": 3.08,
+     "worst_plausible_improvement_c": 2.78
+    }
+   }
+  },
+  {
+   "i": 255,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "gate",
+   "data": {
+    "allowed": true,
+    "checks": [
+     {
+      "name": "in_catalog",
+      "pass": true,
+      "detail": "action is in the catalog and its arguments validate"
+     },
+     {
+      "name": "horizon_bound",
+      "pass": true,
+      "detail": "prediction horizon 90 min is within 120 min"
+     },
+     {
+      "name": "simulated_first",
+      "pass": true,
+      "detail": "tested 3 distinct actions in simulation"
+     },
+     {
+      "name": "not_repeat_refusal",
+      "pass": true,
+      "detail": "this action has not been refused before"
+     },
+     {
+      "name": "model_adequate",
+      "pass": true,
+      "detail": "the twin explains the observed data"
+     },
+     {
+      "name": "hazard_plausible",
+      "pass": true,
+      "detail": "P(hazard within horizon)=1.00 >= 0.15"
+     },
+     {
+      "name": "robust_improvement",
+      "pass": true,
+      "detail": "improves the predicted peak by >= 1 C under every plausible hypothesis"
+     },
+     {
+      "name": "no_new_hazard",
+      "pass": true,
+      "detail": "the action does not create a new predicted limit breach"
+     }
+    ],
+    "reasons": [],
+    "expectedImprovementC": 3.08,
+    "worstCaseImprovementC": 2.78
+   }
+  },
+  {
+   "i": 256,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "approval",
+   "data": {
+    "decision": "approved",
+    "mode": "auto-simulated",
+    "by": "simulated operator (auto-approved in this recording)"
+   }
+  },
+  {
+   "i": 257,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "applied",
+   "data": {
+    "action": {
+     "kind": "switch_backup_cooling",
+     "zone": "rackA"
+    },
+    "tApplyMin": 156
+   }
+  },
+  {
+   "i": 258,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "assistant",
+   "data": {
+    "text": "Worsening AC cooling failure confirmed (posterior 1.0, up to 93% lost).\n\nFound: S1 31.9C, S3 28.1C, rising ~0.9C/10min despite approved rackB power-cap 0.6 (M1 dropped to 2.7kW showing cap applied). Hidden rackB ~32.9C. Do-nothing forecast: breach p=1.0, median 34 min.\n\nDone: tested backup-cooling, shed-load, human-check. Backup-cooling rackA reduces peak margin from +1.2C to -0.9C, p_breach 0 under all hypotheses. Requested and human APPROVED backup cooling (20 min latency).\n\nNext: human verify backup cooling starts, repair AC urgently, keep rackB cap. If temps keep rising, escalate further.\n",
+    "model": "muse-spark-1.3",
+    "turn": 7,
+    "tokens": {
+     "prompt_tokens": 7552,
+     "completion_tokens": 359,
+     "reasoning_tokens": 167
+    },
+    "costUsd": 0.01097,
+    "toolCalls": []
+   }
+  },
+  {
+   "i": 259,
+   "tMin": 136,
+   "invocation": 5,
+   "kind": "summary",
+   "data": {
+    "text": "Worsening AC cooling failure confirmed (posterior 1.0, up to 93% lost).\n\nFound: S1 31.9C, S3 28.1C, rising ~0.9C/10min despite approved rackB power-cap 0.6 (M1 dropped to 2.7kW showing cap applied). Hidden rackB ~32.9C. Do-nothing forecast: breach p=1.0, median 34 min.\n\nDone: tested backup-cooling, shed-load, human-check. Backup-cooling rackA reduces peak margin from +1.2C to -0.9C, p_breach 0 under all hypotheses. Requested and human APPROVED backup cooling (20 min latency).\n\nNext: human verify backup cooling starts, repair AC urgently, keep rackB cap. If temps keep rising, escalate further.\n",
+    "outcome": "applied"
+   }
+  },
+  {
+   "i": 260,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "trigger",
+   "data": {
+    "rule": "residual",
+    "detail": "S1 is 5.5 C above the nominal expectation"
+   }
+  },
+  {
+   "i": 261,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "assistant",
+   "data": {
+    "text": "Investigating the S1 drift — refreshing sensor evidence and checking prior cooling actions.",
+    "model": "muse-spark-1.3",
+    "turn": 1,
+    "tokens": {
+     "prompt_tokens": 3125,
+     "completion_tokens": 95,
+     "reasoning_tokens": 33
+    },
+    "costUsd": 0.00431,
+    "toolCalls": [
+     "list_sensors"
+    ]
+   }
+  },
+  {
+   "i": 262,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_call",
+   "data": {
+    "name": "list_sensors",
+    "args": {}
+   }
+  },
+  {
+   "i": 263,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_result",
+   "data": {
+    "name": "list_sensors",
+    "ok": true,
+    "result": {
+     "now_min_since_monitoring_started": 171,
+     "sensors": [
+      {
+       "id": "S1",
+       "label": "Rack A inlet temperature",
+       "location": "Rack A (hot aisle side)",
+       "kind": "temperature",
+       "unit": "°C"
+      },
+      {
+       "id": "S2",
+       "label": "Desk row 1 air temperature",
+       "location": "Desk row 1",
+       "kind": "temperature",
+       "unit": "°C"
+      },
+      {
+       "id": "S3",
+       "label": "Return air temperature",
+       "location": "AC return duct",
+       "kind": "temperature",
+       "unit": "°C"
+      },
+      {
+       "id": "M1",
+       "label": "UPS total power",
+       "location": "UPS output (all loads)",
+       "kind": "power",
+       "unit": "kW"
+      },
+      {
+       "id": "M2",
+       "label": "Rack B power-strip voltage drop",
+       "location": "Rack B feed, strip vs. panel",
+       "kind": "voltage_drop",
+       "unit": "mV"
+      }
+     ],
+     "note": "Everything else in the room is unobserved. Limits are simulated thresholds."
+    }
+   }
+  },
+  {
+   "i": 264,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "assistant",
+   "data": {
+    "text": "Cooling failure was confirmed — now gathering fresh readings to see what's changed.",
+    "model": "muse-spark-1.3",
+    "turn": 2,
+    "tokens": {
+     "prompt_tokens": 3389,
+     "completion_tokens": 457,
+     "reasoning_tokens": 37
+    },
+    "costUsd": 0.00618,
+    "toolCalls": [
+     "get_reading",
+     "get_reading",
+     "get_reading",
+     "get_reading",
+     "get_reading",
+     "sensor_metadata",
+     "sensor_metadata",
+     "sensor_metadata"
+    ]
+   }
+  },
+  {
+   "i": 265,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "S1"
+    }
+   }
+  },
+  {
+   "i": 266,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "S1",
+     "t_min": 171,
+     "value": 31.55,
+     "unit": "°C"
+    }
+   }
+  },
+  {
+   "i": 267,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "S2"
+    }
+   }
+  },
+  {
+   "i": 268,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "S2",
+     "t_min": 171,
+     "value": 27.19,
+     "unit": "°C"
+    }
+   }
+  },
+  {
+   "i": 269,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "S3"
+    }
+   }
+  },
+  {
+   "i": 270,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "S3",
+     "t_min": 171,
+     "value": 29.41,
+     "unit": "°C"
+    }
+   }
+  },
+  {
+   "i": 271,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "M1"
+    }
+   }
+  },
+  {
+   "i": 272,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "M1",
+     "t_min": 171,
+     "value": 2.77,
+     "unit": "kW"
+    }
+   }
+  },
+  {
+   "i": 273,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_reading",
+    "args": {
+     "sensor": "M2"
+    }
+   }
+  },
+  {
+   "i": 274,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_reading",
+    "ok": true,
+    "result": {
+     "sensor": "M2",
+     "t_min": 171,
+     "value": 71.36,
+     "unit": "mV"
+    }
+   }
+  },
+  {
+   "i": 275,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "S1"
+    }
+   }
+  },
+  {
+   "i": 276,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "S1",
+     "label": "Rack A inlet temperature",
+     "location": "Rack A (hot aisle side)",
+     "unit": "°C",
+     "nominal_noise_sigma": 0.3,
+     "last_calibration_days_ago": 374,
+     "std_last_20min": 0.7397,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 277,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "S2"
+    }
+   }
+  },
+  {
+   "i": 278,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "S2",
+     "label": "Desk row 1 air temperature",
+     "location": "Desk row 1",
+     "unit": "°C",
+     "nominal_noise_sigma": 0.3,
+     "last_calibration_days_ago": 196,
+     "std_last_20min": 0.4756,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 279,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_call",
+   "data": {
+    "name": "sensor_metadata",
+    "args": {
+     "sensor": "S3"
+    }
+   }
+  },
+  {
+   "i": 280,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_result",
+   "data": {
+    "name": "sensor_metadata",
+    "ok": true,
+    "result": {
+     "id": "S3",
+     "label": "Return air temperature",
+     "location": "AC return duct",
+     "unit": "°C",
+     "nominal_noise_sigma": 0.3,
+     "last_calibration_days_ago": 244,
+     "std_last_20min": 0.3159,
+     "flat_suspect": false
+    }
+   }
+  },
+  {
+   "i": 281,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "assistant",
+   "data": {
+    "text": "Sensors still shifting — pulling recent history and running diagnosis.",
+    "model": "muse-spark-1.3",
+    "turn": 3,
+    "tokens": {
+     "prompt_tokens": 4270,
+     "completion_tokens": 365,
+     "reasoning_tokens": 74
+    },
+    "costUsd": 0.00689,
+    "toolCalls": [
+     "get_history",
+     "get_history",
+     "get_history",
+     "estimate_hidden_zones",
+     "diagnose"
+    ]
+   }
+  },
+  {
+   "i": 282,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "S1",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 283,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "S1",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 60,
+       "value": 29.88
+      },
+      {
+       "t_min_ago": 56,
+       "value": 30.17
+      },
+      {
+       "t_min_ago": 52,
+       "value": 30.46
+      },
+      {
+       "t_min_ago": 48,
+       "value": 31.19
+      },
+      {
+       "t_min_ago": 44,
+       "value": 31.94
+      },
+      {
+       "t_min_ago": 40,
+       "value": 32.36
+      },
+      {
+       "t_min_ago": 36,
+       "value": 31.98
+      },
+      {
+       "t_min_ago": 32,
+       "value": 32.98
+      },
+      {
+       "t_min_ago": 28,
+       "value": 33.03
+      },
+      {
+       "t_min_ago": 24,
+       "value": 33.36
+      },
+      {
+       "t_min_ago": 20,
+       "value": 33.69
+      },
+      {
+       "t_min_ago": 16,
+       "value": 33.67
+      },
+      {
+       "t_min_ago": 12,
+       "value": 33.01
+      },
+      {
+       "t_min_ago": 8,
+       "value": 32.61
+      },
+      {
+       "t_min_ago": 4,
+       "value": 32.14
+      },
+      {
+       "t_min_ago": 0,
+       "value": 31.55
+      }
+     ],
+     "min": 29.29,
+     "max": 34.13,
+     "trend_per_10min": 0.5
+    }
+   }
+  },
+  {
+   "i": 284,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "S3",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 285,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "S3",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 60,
+       "value": 26.2
+      },
+      {
+       "t_min_ago": 56,
+       "value": 26.45
+      },
+      {
+       "t_min_ago": 52,
+       "value": 27.44
+      },
+      {
+       "t_min_ago": 48,
+       "value": 27.61
+      },
+      {
+       "t_min_ago": 44,
+       "value": 27.66
+      },
+      {
+       "t_min_ago": 40,
+       "value": 27.76
+      },
+      {
+       "t_min_ago": 36,
+       "value": 28.4
+      },
+      {
+       "t_min_ago": 32,
+       "value": 28.39
+      },
+      {
+       "t_min_ago": 28,
+       "value": 28.24
+      },
+      {
+       "t_min_ago": 24,
+       "value": 28.48
+      },
+      {
+       "t_min_ago": 20,
+       "value": 28.85
+      },
+      {
+       "t_min_ago": 16,
+       "value": 29.07
+      },
+      {
+       "t_min_ago": 12,
+       "value": 29.37
+      },
+      {
+       "t_min_ago": 8,
+       "value": 29.62
+      },
+      {
+       "t_min_ago": 4,
+       "value": 29.67
+      },
+      {
+       "t_min_ago": 0,
+       "value": 29.41
+      }
+     ],
+     "min": 25.75,
+     "max": 29.82,
+     "trend_per_10min": 0.558
+    }
+   }
+  },
+  {
+   "i": 286,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_call",
+   "data": {
+    "name": "get_history",
+    "args": {
+     "sensor": "M1",
+     "window_min": 60
+    }
+   }
+  },
+  {
+   "i": 287,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_result",
+   "data": {
+    "name": "get_history",
+    "ok": true,
+    "result": {
+     "sensor": "M1",
+     "window_min": 60,
+     "points": [
+      {
+       "t_min_ago": 60,
+       "value": 3.6
+      },
+      {
+       "t_min_ago": 56,
+       "value": 3.53
+      },
+      {
+       "t_min_ago": 52,
+       "value": 3.57
+      },
+      {
+       "t_min_ago": 48,
+       "value": 2.79
+      },
+      {
+       "t_min_ago": 44,
+       "value": 2.79
+      },
+      {
+       "t_min_ago": 40,
+       "value": 2.76
+      },
+      {
+       "t_min_ago": 36,
+       "value": 2.71
+      },
+      {
+       "t_min_ago": 32,
+       "value": 2.64
+      },
+      {
+       "t_min_ago": 28,
+       "value": 2.73
+      },
+      {
+       "t_min_ago": 24,
+       "value": 2.75
+      },
+      {
+       "t_min_ago": 20,
+       "value": 2.61
+      },
+      {
+       "t_min_ago": 16,
+       "value": 2.62
+      },
+      {
+       "t_min_ago": 12,
+       "value": 2.7
+      },
+      {
+       "t_min_ago": 8,
+       "value": 2.72
+      },
+      {
+       "t_min_ago": 4,
+       "value": 2.74
+      },
+      {
+       "t_min_ago": 0,
+       "value": 2.77
+      }
+     ],
+     "min": 2.59,
+     "max": 3.6,
+     "trend_per_10min": -0.106
+    }
+   }
+  },
+  {
+   "i": 288,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_call",
+   "data": {
+    "name": "estimate_hidden_zones",
+    "args": {}
+   }
+  },
+  {
+   "i": 289,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_result",
+   "data": {
+    "name": "estimate_hidden_zones",
+    "ok": true,
+    "result": {
+     "t_min": 171,
+     "zones": [
+      {
+       "zone": "rackB",
+       "estimate_c": 34.6,
+       "sigma_c": 2,
+       "simulated_limit_c": 35,
+       "margin_to_limit_c": 0.4
+      },
+      {
+       "zone": "desk2",
+       "estimate_c": 27,
+       "sigma_c": 0.2,
+       "simulated_limit_c": 32,
+       "margin_to_limit_c": 5
+      },
+      {
+       "zone": "conn",
+       "estimate_c": 34.6,
+       "sigma_c": 2.4,
+       "simulated_limit_c": 70,
+       "margin_to_limit_c": 35.4
+      }
+     ],
+     "caveats": [
+      "Regression trained on simulated scenarios; its error is larger for faults that barely disturb the visible sensors (for example a blocked vent on rack B)."
+     ]
+    }
+   }
+  },
+  {
+   "i": 290,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_call",
+   "data": {
+    "name": "diagnose",
+    "args": {}
+   }
+  },
+  {
+   "i": 291,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_result",
+   "data": {
+    "name": "diagnose",
+    "ok": true,
+    "result": {
+     "t_min": 171,
+     "model_adequate": true,
+     "chi2_per_dof": 1.89,
+     "sensors_excluded_from_fit": [],
+     "observation_coverage": {
+      "untrusted_sensors": [],
+      "unobserved_due_to_sensor_failure": [],
+      "inspection_warranted": false,
+      "note": "Normal readings elsewhere cannot establish that a zone with a failed sensor is safe. A dispatched human check inspects and repairs existing faults in this simulation."
+     },
+     "forecast_uncertainty": {
+      "probabilities_are_calibrated": false,
+      "interpretation": "Probabilities are relative weights within fitted hypotheses, not measured probabilities of safety. Missing fault dynamics can make all hypotheses wrong."
+     },
+     "p_fault": 1,
+     "hypotheses": [
+      {
+       "family": "ac",
+       "posterior": 1,
+       "description": "AC cooling capacity degrading (up to 88% lost, ramp ~20 min), onset ~103 min ago"
+      },
+      {
+       "family": "none",
+       "posterior": 0,
+       "description": "No fault: readings are explained by the nominal model"
+      },
+      {
+       "family": "vent_rackA",
+       "posterior": 0,
+       "description": "Rack A vent/airflow blocked (up to 85%), onset ~130 min ago"
+      },
+      {
+       "family": "vent_rackB",
+       "posterior": 0,
+       "description": "Rack B vent/airflow blocked (up to 95%), onset ~156 min ago"
+      }
+     ],
+     "if_nothing_is_done_90min": {
+      "p_hazard_within_alert_margin": 1,
+      "p_breach": 0,
+      "expected_peak_margin_c": -1.6,
+      "worst_plausible_peak_margin_c": -1.6,
+      "median_time_to_limit_min": null,
+      "alert_margin_c": 3
+     },
+     "note": "Hypothesis posteriors are tempered because residuals are autocorrelated. Early in a fault several hypotheses can fit; prefer actions that work under all of them."
+    }
+   }
+  },
+  {
+   "i": 292,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "assistant",
+   "data": {
+    "text": "Peak temps are easing but the hidden zone remains tight — testing backup options to confirm safety.",
+    "model": "muse-spark-1.3",
+    "turn": 4,
+    "tokens": {
+     "prompt_tokens": 5894,
+     "completion_tokens": 671,
+     "reasoning_tokens": 484
+    },
+    "costUsd": 0.01022,
+    "toolCalls": [
+     "simulate_action",
+     "simulate_action"
+    ]
+   }
+  },
+  {
+   "i": 293,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_call",
+   "data": {
+    "name": "simulate_action",
+    "args": {
+     "action": {
+      "kind": "shed_noncritical_load"
+     },
+     "horizon_min": 60
+    }
+   }
+  },
+  {
+   "i": 294,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_result",
+   "data": {
+    "name": "simulate_action",
+    "ok": true,
+    "result": {
+     "action": {
+      "kind": "shed_noncritical_load"
+     },
+     "takes_effect_in_min": 16,
+     "horizon_min": 60,
+     "do_nothing": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -1.8,
+      "worst_plausible_peak_margin_c": -1.8,
+      "median_time_to_limit_min": null
+     },
+     "with_action": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -2,
+      "worst_plausible_peak_margin_c": -2,
+      "median_time_to_limit_min": null
+     },
+     "per_hypothesis": [
+      {
+       "family": "ac",
+       "weight": 0.484,
+       "peak_margin_c_do_nothing": -1.8,
+       "peak_margin_c_with_action": -2,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.484,
+       "peak_margin_c_do_nothing": -1.8,
+       "peak_margin_c_with_action": -2,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.031,
+       "peak_margin_c_do_nothing": -1.8,
+       "peak_margin_c_with_action": -2,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      }
+     ],
+     "reading_guide": "peak_margin_c = hottest (zone temperature - its limit) over the horizon; negative means within limits."
+    }
+   }
+  },
+  {
+   "i": 295,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_call",
+   "data": {
+    "name": "simulate_action",
+    "args": {
+     "action": {
+      "kind": "switch_backup_cooling",
+      "zone": "rackB"
+     },
+     "horizon_min": 60
+    }
+   }
+  },
+  {
+   "i": 296,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "tool_result",
+   "data": {
+    "name": "simulate_action",
+    "ok": true,
+    "result": {
+     "action": {
+      "kind": "switch_backup_cooling",
+      "zone": "rackB"
+     },
+     "takes_effect_in_min": 20,
+     "horizon_min": 60,
+     "do_nothing": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -1.8,
+      "worst_plausible_peak_margin_c": -1.8,
+      "median_time_to_limit_min": null
+     },
+     "with_action": {
+      "p_breach": 0,
+      "expected_peak_margin_c": -2,
+      "worst_plausible_peak_margin_c": -1.9,
+      "median_time_to_limit_min": null
+     },
+     "per_hypothesis": [
+      {
+       "family": "ac",
+       "weight": 0.484,
+       "peak_margin_c_do_nothing": -1.8,
+       "peak_margin_c_with_action": -2,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.484,
+       "peak_margin_c_do_nothing": -1.8,
+       "peak_margin_c_with_action": -2,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      },
+      {
+       "family": "ac",
+       "weight": 0.031,
+       "peak_margin_c_do_nothing": -1.8,
+       "peak_margin_c_with_action": -1.9,
+       "time_to_limit_min_do_nothing": null,
+       "time_to_limit_min_with_action": null
+      }
+     ],
+     "reading_guide": "peak_margin_c = hottest (zone temperature - its limit) over the horizon; negative means within limits."
+    }
+   }
+  },
+  {
+   "i": 297,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "assistant",
+   "data": {
+    "text": "Ongoing AC degradation (posterior 1.0) still explains readings, but trend has reversed:\n\n- All sensors trusted (none flat/stuck).\n- S1 31.6C, S3 29.4C, M1 2.77kW. History shows peak ~33.7C ~16 min ago, now falling ~0.5C/10min. Prior approved rackB cap (M1 drop visible) + rackA backup cooling are taking effect.\n- Hidden rackB regression ~34.6C, margin 0.4C to 35C limit, sigma 2C - tight but not proof of breach.\n- Physics diagnose 90-min do-nothing: p_breach 0, expected peak margin -1.6C. No breach forecast.\n- Tested shed-load and backup-cooling rackB: both p_breach 0 with and without, only -0.2C extra margin. No clearly needed extra action, so not requesting one to avoid unnecessary intervention.\n\nNo warn/critical warranted - breach not forecast. Continue monitoring, verify backup cooling stays on, repair main AC. If temps rebound, re-investigate.\n",
+    "model": "muse-spark-1.3",
+    "turn": 5,
+    "tokens": {
+     "prompt_tokens": 6680,
+     "completion_tokens": 619,
+     "reasoning_tokens": 369
+    },
+    "costUsd": 0.01098,
+    "toolCalls": []
+   }
+  },
+  {
+   "i": 298,
+   "tMin": 171,
+   "invocation": 6,
+   "kind": "summary",
+   "data": {
+    "text": "Ongoing AC degradation (posterior 1.0) still explains readings, but trend has reversed:\n\n- All sensors trusted (none flat/stuck).\n- S1 31.6C, S3 29.4C, M1 2.77kW. History shows peak ~33.7C ~16 min ago, now falling ~0.5C/10min. Prior approved rackB cap (M1 drop visible) + rackA backup cooling are taking effect.\n- Hidden rackB regression ~34.6C, margin 0.4C to 35C limit, sigma 2C - tight but not proof of breach.\n- Physics diagnose 90-min do-nothing: p_breach 0, expected peak margin -1.6C. No breach forecast.\n- Tested shed-load and backup-cooling rackB: both p_breach 0 with and without, only -0.2C extra margin. No clearly needed extra action, so not requesting one to avoid unnecessary intervention.\n\nNo warn/critical warranted - breach not forecast. Continue monitoring, verify backup cooling stays on, repair main AC. If temps rebound, re-investigate.\n",
+    "outcome": "investigating"
+   }
+  }
+ ]
+}

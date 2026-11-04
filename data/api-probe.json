@@ -1,0 +1,135 @@
+{
+ "base": "https://api.meta.ai/v1",
+ "model": "muse-spark-1.3",
+ "at": "2026-11-03T18:56:12.564Z",
+ "models": {
+  "status": 200,
+  "ids": [
+   "muse-wonder-1.0",
+   "sam-3.1",
+   "muse-spark-1.3-contributor",
+   "muse-voice-transcribe-1.0",
+   "muse-spark-1.3",
+   "muse-image-1.0",
+   "muse-spark-1.2-contributor",
+   "muse-spark-1.2",
+   "muse-spark-1.1"
+  ]
+ },
+ "chat_tool_call_max_tokens": {
+  "finish_reason": "tool_calls",
+  "message": {
+   "content": "I'll read sensor S1 for you.",
+   "refusal": null,
+   "tool_calls": [
+    {
+     "id": "call_dbd3dbaf-138f-4f83-a528-f5e9fda4073d",
+     "type": "function",
+     "function": {
+      "name": "get_reading",
+      "arguments": "{\"sensor\":\"S1\"}"
+     }
+    }
+   ],
+   "role": "assistant"
+  },
+  "usage": {
+   "completion_tokens": 296,
+   "prompt_tokens": 553,
+   "total_tokens": 849,
+   "completion_tokens_details": {
+    "reasoning_tokens": 227
+   },
+   "prompt_tokens_details": {
+    "cached_tokens": 113
+   }
+  }
+ },
+ "chat_tool_call_max_completion_tokens": {
+  "finish_reason": "tool_calls",
+  "message": {
+   "content": "I'll read sensor S1 for you.",
+   "refusal": null,
+   "tool_calls": [
+    {
+     "id": "call_6cdd8ac8-241d-4457-95c9-0e2161acaa62",
+     "type": "function",
+     "function": {
+      "name": "get_reading",
+      "arguments": "{\"sensor\":\"S1\"}"
+     }
+    }
+   ],
+   "role": "assistant"
+  },
+  "usage": {
+   "completion_tokens": 460,
+   "prompt_tokens": 553,
+   "total_tokens": 1013,
+   "completion_tokens_details": {
+    "reasoning_tokens": 391
+   },
+   "prompt_tokens_details": {
+    "cached_tokens": 497
+   }
+  }
+ },
+ "chat_reasoning_effort_low": {
+  "content": "Hi! 👋 I'm Muse Spark — how can I help you today?",
+  "usage": {
+   "completion_tokens": 168,
+   "prompt_tokens": 11,
+   "total_tokens": 179,
+   "completion_tokens_details": {
+    "reasoning_tokens": 145
+   },
+   "prompt_tokens_details": {
+    "cached_tokens": 0
+   }
+  }
+ },
+ "responses_tool_call": {
+  "output": [
+   {
+    "type": "reasoning",
+    "id": "rs_6aea2e5b2a74e0193bab4e03:rs_01102e49-7231-4bcb-86c7-a54bbbd68cc8",
+    "summary": [],
+    "status": "completed"
+   },
+   {
+    "type": "message",
+    "id": "rs_986d58b2-d2fc-4cb8-9fde-6329104a562e",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "output_text",
+      "text": "I'll read sensor S1 for you.",
+      "annotations": [],
+      "logprobs": []
+     }
+    ],
+    "phase": "commentary",
+    "status": "completed"
+   },
+   {
+    "type": "function_call",
+    "id": "fc_24bfb419-df2f-46af-b80e-84759a3529c7",
+    "call_id": "call_24bfb419-df2f-46af-b80e-84759a3529c7",
+    "name": "get_reading",
+    "arguments": "{\"sensor\":\"S1\"}",
+    "status": "completed"
+   }
+  ],
+  "usage": {
+   "input_tokens": 553,
+   "input_tokens_details": {
+    "cached_tokens": 113
+   },
+   "output_tokens": 304,
+   "output_tokens_details": {
+    "reasoning_tokens": 235
+   },
+   "total_tokens": 857
+  }
+ }
+}

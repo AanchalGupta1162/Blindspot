@@ -1,0 +1,70 @@
+{
+ "schemaVersion": 1,
+ "id": "eval-v2-muse-spark-1.3-ac_failure-3000-llm",
+ "source": "llm",
+ "model": "muse-spark-1.3",
+ "label": "LLM agent (muse-spark-1.3) with the same tools and safety gate",
+ "headline": "limit would be breached at 120 min without action.",
+ "createdAt": "2026-11-04T15:23:55.351Z",
+ "simulated": true,
+ "scenario": {
+  "kind": "ac_failure",
+  "seed": 3000,
+  "startHour": 10.61,
+  "durationMin": 240,
+  "onsetMin": 51.333333333333336
+ },
+ "trigger": {
+  "tMin": 72,
+  "rule": "residual",
+  "detail": "S3 is 1.0 C above the nominal expectation"
+ },
+ "invocations": 1,
+ "status": "budget_stopped",
+ "alertMin": null,
+ "action": null,
+ "actions": [],
+ "approval": null,
+ "outcome": {
+  "doNothing": {
+   "limitExceeded": true,
+   "firstBreachMin": 120,
+   "firstBreachNode": "rackB",
+   "degreeMinutesAboveLimit": 2050.75,
+   "peakMarginC": 8.89
+  },
+  "withAction": null,
+  "peakMarginImprovementC": null,
+  "degreeMinutesSaved": null
+ },
+ "usage": {
+  "inputTokens": 0,
+  "outputTokens": 0,
+  "reasoningTokens": 0,
+  "costUsd": 0,
+  "turns": 0,
+  "models": []
+ },
+ "events": [
+  {
+   "i": 0,
+   "tMin": 72,
+   "invocation": 1,
+   "kind": "trigger",
+   "data": {
+    "rule": "residual",
+    "detail": "S3 is 1.0 C above the nominal expectation"
+   }
+  },
+  {
+   "i": 1,
+   "tMin": 72,
+   "invocation": 1,
+   "kind": "status",
+   "data": {
+    "status": "paused",
+    "message": "model call failed: Connection error."
+   }
+  }
+ ]
+}

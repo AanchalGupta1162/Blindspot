@@ -1,0 +1,45 @@
+{
+ "schemaVersion": 1,
+ "id": "eval-v2-muse-spark-1.3-control-3001-llm",
+ "source": "llm",
+ "model": "muse-spark-1.3",
+ "label": "LLM agent (muse-spark-1.3) with the same tools and safety gate",
+ "headline": "No alert raised.",
+ "createdAt": "2026-11-04T15:46:27.256Z",
+ "simulated": true,
+ "scenario": {
+  "kind": "control",
+  "seed": 3001,
+  "startHour": 9.47,
+  "durationMin": 480,
+  "onsetMin": 41.21666666666667
+ },
+ "trigger": null,
+ "invocations": 0,
+ "status": "no_action",
+ "alertMin": null,
+ "action": null,
+ "actions": [],
+ "approval": null,
+ "outcome": {
+  "doNothing": {
+   "limitExceeded": false,
+   "firstBreachMin": null,
+   "firstBreachNode": null,
+   "degreeMinutesAboveLimit": 0,
+   "peakMarginC": -5.59
+  },
+  "withAction": null,
+  "peakMarginImprovementC": null,
+  "degreeMinutesSaved": null
+ },
+ "usage": {
+  "inputTokens": 0,
+  "outputTokens": 0,
+  "reasoningTokens": 0,
+  "costUsd": 0,
+  "turns": 0,
+  "models": []
+ },
+ "events": []
+}

@@ -1,0 +1,236 @@
+{
+ "version": "research-v3",
+ "generatedAt": "2026-11-04T19:26:49.308Z",
+ "model": "muse-spark-1.3",
+ "note": "Targeted regression on three previously missed cases, one connector case and one no-fault control. Selected using prior failures; NOT a new blind evaluation or a replacement for the original 20-scenario results. Auto-simulated approvals. Any benefit from dispatched inspection assumes successful repair in the simulator.",
+ "n": 5,
+ "plannedN": 5,
+ "complete": true,
+ "breachScenarios": 4,
+ "detectedBeforeBreach": 4,
+ "medianLeadMin": 57.25,
+ "controlsWithAlert": 1,
+ "controls": 1,
+ "totalCostUsd": 0.7765,
+ "rows": [
+  {
+   "id": "stuck_sensor-3000",
+   "alertMin": 49.5,
+   "breachMin": 137.5,
+   "costUsd": 0.108,
+   "status": "applied",
+   "turns": 13,
+   "action": {
+    "kind": "dispatch_human_check"
+   },
+   "peakImprovementC": 9.45,
+   "breachAvoided": true
+  },
+  {
+   "id": "stuck_sensor-3001",
+   "alertMin": 80.5,
+   "breachMin": 148.5,
+   "costUsd": 0.1822,
+   "status": "applied",
+   "turns": 19,
+   "action": {
+    "kind": "dispatch_human_check"
+   },
+   "peakImprovementC": 7.18,
+   "breachAvoided": true
+  },
+  {
+   "id": "unattended_ac-3002",
+   "alertMin": 105,
+   "breachMin": 147.5,
+   "costUsd": 0.3538,
+   "status": "applied",
+   "turns": 40,
+   "action": {
+    "kind": "power_cap_rack",
+    "rack": "rackB",
+    "fraction": 0.6
+   },
+   "peakImprovementC": 6.33,
+   "breachAvoided": true
+  },
+  {
+   "id": "loose_connection-3000",
+   "alertMin": 65.5,
+   "breachMin": 112,
+   "costUsd": 0.0598,
+   "status": "applied",
+   "turns": 8,
+   "action": {
+    "kind": "dispatch_human_check"
+   },
+   "peakImprovementC": 26.28,
+   "breachAvoided": true
+  },
+  {
+   "id": "control-3000",
+   "alertMin": 109.5,
+   "breachMin": null,
+   "costUsd": 0.0727,
+   "status": "applied",
+   "turns": 8,
+   "action": {
+    "kind": "dispatch_human_check"
+   },
+   "peakImprovementC": 0,
+   "breachAvoided": false
+  }
+ ],
+ "runIds": [
+  "research-v3-muse-spark-1.3-stuck_sensor-3000-llm",
+  "research-v3-muse-spark-1.3-stuck_sensor-3001-llm",
+  "research-v3-muse-spark-1.3-unattended_ac-3002-llm",
+  "research-v3-muse-spark-1.3-loose_connection-3000-llm",
+  "research-v3-muse-spark-1.3-control-3000-llm"
+ ],
+ "batchCapUsd": 1,
+ "batchSpentUsd": 0.7765,
+ "originalComparison": [
+  {
+   "id": "stuck_sensor-3000",
+   "before": {
+    "id": "stuck_sensor-3000",
+    "alertMin": null,
+    "breachMin": 137.5,
+    "costUsd": 0.1431,
+    "status": "no_action",
+    "turns": 19,
+    "action": null,
+    "peakImprovementC": null,
+    "breachAvoided": null
+   },
+   "after": {
+    "id": "stuck_sensor-3000",
+    "alertMin": 49.5,
+    "breachMin": 137.5,
+    "costUsd": 0.108,
+    "status": "applied",
+    "turns": 13,
+    "action": {
+     "kind": "dispatch_human_check"
+    },
+    "peakImprovementC": 9.45,
+    "breachAvoided": true
+   }
+  },
+  {
+   "id": "stuck_sensor-3001",
+   "before": {
+    "id": "stuck_sensor-3001",
+    "alertMin": null,
+    "breachMin": 148.5,
+    "costUsd": 0.1282,
+    "status": "no_action",
+    "turns": 17,
+    "action": null,
+    "peakImprovementC": null,
+    "breachAvoided": null
+   },
+   "after": {
+    "id": "stuck_sensor-3001",
+    "alertMin": 80.5,
+    "breachMin": 148.5,
+    "costUsd": 0.1822,
+    "status": "applied",
+    "turns": 19,
+    "action": {
+     "kind": "dispatch_human_check"
+    },
+    "peakImprovementC": 7.18,
+    "breachAvoided": true
+   }
+  },
+  {
+   "id": "unattended_ac-3002",
+   "before": {
+    "id": "unattended_ac-3002",
+    "alertMin": null,
+    "breachMin": 147.5,
+    "costUsd": 0.1776,
+    "status": "no_action",
+    "turns": 20,
+    "action": null,
+    "peakImprovementC": null,
+    "breachAvoided": null
+   },
+   "after": {
+    "id": "unattended_ac-3002",
+    "alertMin": 105,
+    "breachMin": 147.5,
+    "costUsd": 0.3538,
+    "status": "applied",
+    "turns": 40,
+    "action": {
+     "kind": "power_cap_rack",
+     "rack": "rackB",
+     "fraction": 0.6
+    },
+    "peakImprovementC": 6.33,
+    "breachAvoided": true
+   }
+  },
+  {
+   "id": "loose_connection-3000",
+   "before": {
+    "id": "loose_connection-3000",
+    "alertMin": 80.5,
+    "breachMin": 112,
+    "costUsd": 0.1102,
+    "status": "applied",
+    "turns": 12,
+    "action": {
+     "kind": "power_cap_rack",
+     "rack": "rackB",
+     "fraction": 0.6
+    },
+    "peakImprovementC": 26.36,
+    "breachAvoided": true
+   },
+   "after": {
+    "id": "loose_connection-3000",
+    "alertMin": 65.5,
+    "breachMin": 112,
+    "costUsd": 0.0598,
+    "status": "applied",
+    "turns": 8,
+    "action": {
+     "kind": "dispatch_human_check"
+    },
+    "peakImprovementC": 26.28,
+    "breachAvoided": true
+   }
+  },
+  {
+   "id": "control-3000",
+   "before": {
+    "id": "control-3000",
+    "alertMin": null,
+    "breachMin": null,
+    "costUsd": 0.0414,
+    "status": "no_action",
+    "turns": 5,
+    "action": null,
+    "peakImprovementC": null,
+    "breachAvoided": null
+   },
+   "after": {
+    "id": "control-3000",
+    "alertMin": 109.5,
+    "breachMin": null,
+    "costUsd": 0.0727,
+    "status": "applied",
+    "turns": 8,
+    "action": {
+     "kind": "dispatch_human_check"
+    },
+    "peakImprovementC": 0,
+    "breachAvoided": false
+   }
+  }
+ ]
+}

@@ -1,0 +1,23 @@
+{
+ "version": "forecast-v3",
+ "generatedAt": "2026-11-04T19:13:21.101Z",
+ "coverageTarget": 0.9,
+ "calibrationScenarios": 28,
+ "calibrationSeeds": [
+  4100,
+  4101,
+  4102,
+  4103
+ ],
+ "boundC": 16.32,
+ "horizonMin": 90,
+ "heldOut": {
+  "scenarios": 14,
+  "covered": 12,
+  "seeds": [
+   4200,
+   4201
+  ]
+ },
+ "note": "Empirical one-sided upper residual allowance, using a max-over-checkpoints score per scenario. Calibration seeds are separate from estimator training and the published evaluation. Coverage assumptions may fail under dependent scenarios or distribution shift; this is not a real-world safety guarantee. It does not modify or bypass gate checks."
+}
